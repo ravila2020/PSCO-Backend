@@ -161,7 +161,7 @@ public class RessAURolController {
          for (int j=0; j<permisosRol.size();j++) 
             {
            	 System.out.print("                 + RestAppUserController Permiso: " + j + " - " + permisosRol.get(j).getPermissionId() + "\n ");
-           	 if (permisosRol.get(j).getPermissionId()==7)
+           	 if (permisosRol.get(j).getPermissionId()==7 || permisosRol.get(j).getPermissionId()==1)
            	    {
            		 autorizado = true;
            	    }         	 
