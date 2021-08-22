@@ -32,7 +32,7 @@ import mx.com.oneproject.spco.respuesta.EntradaAuth;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/Auth")
 public class RestAuthController {
@@ -158,6 +158,14 @@ public class RestAuthController {
         	else {
         		// Se da de alta la vigencia del token
         		vToken.setFecha(ZonedDateTime.now());
+  //debug ini      		
+//        		vToken.setId(63);
+        		vToken.setToken("TOKEN");
+        		System.out.print("Secuencia de vigencia ID: "+vToken.getId()); 
+           		System.out.print("Secuencia de vigencia TOKEN: "+vToken.getToken()); 
+           		System.out.print("Secuencia de vigencia FECHA: "+vToken.getFecha()); 
+           	        		
+  //debug fin      		
         		vigencia.save(vToken);
         		System.out.print("Secuencia de vigencia: "+vToken.getId()); 
         		Respuesta.setDescription("Acceso autorizado");

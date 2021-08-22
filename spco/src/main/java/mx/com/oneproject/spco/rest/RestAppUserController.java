@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.log.logRegistra;
 import mx.com.oneproject.spco.modelo.AppUser;
@@ -26,12 +28,10 @@ import mx.com.oneproject.spco.modelo.VigenciaToken;
 import mx.com.oneproject.spco.repositorio.IMAppUserRepo;
 import mx.com.oneproject.spco.repositorio.IMLogTransacctionRepo;
 import mx.com.oneproject.spco.repositorio.IMVigTokenRepo;
+import mx.com.oneproject.spco.respuesta.AppUserPag;
 import mx.com.oneproject.spco.result.AnsUserPag;
 import mx.com.oneproject.spco.result.AnsUserPagList;
 import mx.com.oneproject.spco.result.AnsUserPagOpc;
-
-import mx.com.oneproject.spco.respuesta.AppUserPag;
-import io.jsonwebtoken.Jwts;
 
 @CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
@@ -370,15 +370,26 @@ public class RestAppUserController {
 			String idAppUser = NuevoUsuario.getUsername();
 	    	String CryptoPass = codificador.encode(NuevoUsuario.getPassword());
 	    	NuevoUsuario.setPassword(CryptoPass);
+	    	
+	    	//-------------existe el uauario?
+			if (!repAppUser.findByUsername(idAppUser).isPresent())
+			{
+	    	//-------------
 			AppUser usuarioProc = repAppUser.save(NuevoUsuario);
 			System.out.print(" + RestAppUserController insertar id: " + usuarioProc.getId() + " " + usuarioProc.getUsername() + "\n ");
 			respuesta.setCr("00");
 			respuesta.setDescripcion("Correcto");
 			respuesta.setContenido(repAppUser.findByUsername(usuarioProc.getUsername()));
 	        return respuesta;
+				}
+		        else {
+					respuesta.setCr("83");
+					respuesta.setDescripcion("Ya existe el usuario");
+			        return respuesta;
+		    	}
 	    	} catch (Exception ex) {
 	    		throw new ApiRequestException("Upsi");
-	    	}
+	    	} 
 		}
 
 	// Modificacion de password con validacion de token y registro de log.    

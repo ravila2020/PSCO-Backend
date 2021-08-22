@@ -48,6 +48,9 @@ public class RestRolController {
 	// Consulta de la lista de roles con validacion de token.
 	@GetMapping
 	public AnsRol listar(HttpServletRequest peticion){
+		System.out.print("\n\n + RestRolController Petición: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+		System.out.print("\n\n + RestRolController Petición: " + peticion.getHeader("Authorization")+ "\n ");	
+		
 		AnsRol Respuesta = new AnsRol();
     	String token = peticion.getHeader("Authorization");
     	System.out.print("\n\n + RestRolController: " + token + "\n ");	
