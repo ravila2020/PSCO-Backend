@@ -33,7 +33,7 @@ import mx.com.oneproject.spco.result.AnsUserPag;
 import mx.com.oneproject.spco.result.AnsUserPagList;
 import mx.com.oneproject.spco.result.AnsUserPagOpc;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
 @RequestMapping("/Users")
 public class RestAppUserController {
