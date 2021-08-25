@@ -24,4 +24,10 @@ public interface IMSysUserRepo extends JpaRepository<SysUsuarios, SysUsuariosId>
 	
 	@Query("select m        from SysUsuarios m where m.estatus = 'A'")
 	List<SysUsuarios> findByClave();
+
+	@Query("select count(*) from SysUsuarios m where m.estatus = 'A' and m.idRecinto between :inferior and :superior")
+	   long countByRecinto(@Param("inferior") BigDecimal linInf, @Param("superior") BigDecimal clavelimSup);
+
+	@Query("select m        from SysUsuarios m where m.estatus = 'A' and m.idRecinto between :inferior and :superior")
+	List<SysUsuarios> findByRecinto(@Param("inferior") BigDecimal linInf, @Param("superior") BigDecimal clavelimSup);
 }

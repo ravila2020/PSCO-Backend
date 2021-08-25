@@ -19,7 +19,7 @@ import mx.com.oneproject.spco.respuesta.SysUserPag;
 import mx.com.oneproject.spco.result.AnsSysUser;
 import mx.com.oneproject.spco.result.AnsSysUserPagList;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
 @RequestMapping("/SysUser")
 public class RestSysUsuarioController {
@@ -70,7 +70,7 @@ public class RestSysUsuarioController {
     @GetMapping(path = {"/SysUsPag"})
     public AnsSysUserPagList listarPag(@RequestParam(required = false, value = "page") int page,
     		                    @RequestParam(required = false, value = "perpage") int perPage, 
-  //  		                    @RequestParam(required = false, value = "clvap") String claveClvap,
+//    		                    @RequestParam(required = false, value = "recinto") String recinto,
     		                    HttpServletRequest peticion) {
   // Validación de token    	
     	AnsSysUserPagList respuesta = new AnsSysUserPagList();
@@ -137,5 +137,90 @@ public class RestSysUsuarioController {
          return respuesta;
     }
 	
+	
+	// Consulta de sys_usuarios con paginacion y validacion de token.
+    @GetMapping(path = {"/RecintPag"})
+    public AnsSysUserPagList listarPag(@RequestParam(required = false, value = "page") int page,
+    		                    @RequestParam(required = false, value = "perpage") int perPage, 
+    		                    @RequestParam(required = false, value = "recinto") String recinto,
+    		                    HttpServletRequest peticion) {
+    	BigDecimal limInferior = BigDecimal.valueOf(0.0);
+    	BigDecimal limSuperior = BigDecimal.valueOf(99999999.0);
+    	Double DRecinto = 0.0;
+    if (!recinto.isEmpty())
+    		{ 
+    	DRecinto = Double.valueOf(recinto);
+    	limInferior = BigDecimal.valueOf(DRecinto);
+    	limSuperior = BigDecimal.valueOf(DRecinto);
+    		} else
+    		{
+    			limInferior = BigDecimal.valueOf(0.0);
+    			limSuperior = BigDecimal.valueOf(99999999.0);
+    		}
+    	
+    // Validación de token    	
+    	AnsSysUserPagList respuesta = new AnsSysUserPagList();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysUsuarioController token: " + token + "\n ");
+		if (token != null) {
+			String user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysUsuarioController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// Preparación de la paginación.
+		boolean enabled = true;
+		SysUsuarios sysUsuarioCero = new SysUsuarios();
+		Long todos = (long) 0;
+		double paginas = (float) 0.0;
+		Integer pagEntero = 0;
+		List<SysUsuarios> todosSysUsuarios;
+		List<SysUsuarios> paginaSysUsuarios; 
+		Integer sysUsuarioInicial, sysUsuarioFinal;
+		
+		SysUserPag resultado = new SysUserPag();
+                                                                      	System.out.print(" + RestSysUsuarioController listarPag page: " + page + " perpage: " + perPage +"\n ");
+    // obtener el total de sys_usuarios
+         todos = sysUser.countByRecinto(limInferior,limSuperior);
+         paginas = (double) todos / perPage;
+         pagEntero = (int) paginas;
+         if ((paginas-pagEntero)>0)
+         {
+        	 pagEntero++;
+         }
+    // Obtener la lista de sys_usuarios solicitada 
+         sysUsuarioInicial = (perPage  * (page - 1) );
+         sysUsuarioFinal   = (sysUsuarioInicial + perPage) - 1;
+         todosSysUsuarios  = sysUser.findByRecinto(limInferior,limSuperior);
+         paginaSysUsuarios = sysUser.findByRecinto(limInferior,limSuperior);
+         paginaSysUsuarios.clear();
+         for (int i=0; i<todos;i++) {
+        	 															System.out.print("\n " + "          + RestSysUsuarioController Apendice: " + i + " - " + todosSysUsuarios.get(i).getIdEmpresa() + " - " + todosSysUsuarios.get(i).getIdRecinto() + " - " + todosSysUsuarios.get(i).getIdUsuario());
+        	 if(i>=sysUsuarioInicial && i<=sysUsuarioFinal)
+        	 {
+        		 sysUsuarioCero = todosSysUsuarios.get(i);
+        		 paginaSysUsuarios.add(sysUsuarioCero);
+        		 System.out.print("  -- En lista  --" + sysUsuarioCero.getIdUsuario() );
+        	 }
+         }
+         
+         																System.out.print("\n + RestSysUsuarioController listarPag todos: " + todos + " paginas: " + paginas + "  " + (paginas-pagEntero ) +"\n ");
+         //
+         resultado.setPage(page);
+         resultado.setPerPage(perPage);
+         resultado.setTotal((int) sysUser.countByRecinto(limInferior,limSuperior));
+         resultado.setTotalPages(pagEntero);
+         resultado.setSysUsuarios(paginaSysUsuarios);
+	 	 respuesta.setContenido(resultado);
+		 respuesta.setCr("00");
+		 respuesta.setDescripcion("Correcto");
+         return respuesta;
+    }
 	
 }
