@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import mx.com.oneproject.spco.modelo.AppUser;
 import mx.com.oneproject.spco.modelo.AppUserRole;
 import mx.com.oneproject.spco.modelo.AppUserRoleId;
@@ -26,13 +28,10 @@ import mx.com.oneproject.spco.repositorio.IMPermissionRepo;
 import mx.com.oneproject.spco.repositorio.IMRolePermissionRepo;
 import mx.com.oneproject.spco.repositorio.IMRoleRepo;
 import mx.com.oneproject.spco.repositorio.IMVigTokenRepo;
-
 import mx.com.oneproject.spco.respuesta.AnswAuth;
 import mx.com.oneproject.spco.respuesta.EntradaAuth;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
-//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/Auth")
 public class RestAuthController {

@@ -10,7 +10,7 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "SYS_USUARIOS1")
+@Table(name = "SYS_USUARIOS")
 @IdClass(SysUsuariosId.class)
 public class SysUsuarios {
 

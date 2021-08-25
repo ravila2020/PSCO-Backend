@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.log.logRegistra;
-import mx.com.oneproject.spco.modelo.CatApendices;
 import mx.com.oneproject.spco.modelo.DetCatAp;
 import mx.com.oneproject.spco.repositorio.IMDetCatApRepo;
 import mx.com.oneproject.spco.respuesta.ApendPag;
