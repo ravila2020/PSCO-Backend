@@ -61,7 +61,7 @@ public class RestLogonController {
     	if (respuestaSysUsuario.isPresent()) {
 	    	Usuario = respuestaSysUsuario.get();
 	    	System.out.print(" + RestLogonController usuarioPorAutorizaracion Usuario: " + Usuario.getIdUsuario() + " \n");                        
-	   	
+	    	Double intento = Usuario.getIntentos().doubleValue();
 	 //* validación de password
 	    	
 	    	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -70,7 +70,7 @@ public class RestLogonController {
 	
 	    	System.out.print(" + RestLogonController usuarioPorAutorizaracion existingPassword: " + existingPassword  +  " -- dbPassword :" + dbPassword +" \n \n");
 	
-	    	if (existingPassword.matches(dbPassword)) {
+	    	if (existingPassword.matches(dbPassword) && intento < 3) {
 	        	System.out.print(" + RestLogonController usuarioPorAutorizaracion Match!!");
 	        	Respuesta.setAuthenticated(true);
 
@@ -93,7 +93,7 @@ public class RestLogonController {
 	        		Respuesta.setIdRecinto(String.valueOf(Usuario.getIdRecinto()));
 	        		Respuesta.setIdUsuario(String.valueOf(Usuario.getIdUsuario()));
 	        		Respuesta.setEstadoUsuario(Usuario.getEstatus());
-
+	        		Usuario.setIntentos(BigDecimal.valueOf(0));
 	        		repAppUser.save(Usuario);
 	        		// Se da de alta la vigencia del token
 	        		vToken.setToken(token);
