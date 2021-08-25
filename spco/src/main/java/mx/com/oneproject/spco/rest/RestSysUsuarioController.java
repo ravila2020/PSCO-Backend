@@ -1,5 +1,6 @@
 package mx.com.oneproject.spco.rest;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.SysUserPag;
+import mx.com.oneproject.spco.result.AnsSysUser;
 import mx.com.oneproject.spco.result.AnsSysUserPagList;
 
 @CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
@@ -36,6 +38,34 @@ public class RestSysUsuarioController {
 	}
 
 
+
+	// Consulta de la lista de sys_usuarios con validacion de token.
+	@GetMapping(path = {"/SysUs"})
+	public AnsSysUser consultaSysUsuario(HttpServletRequest peticion,
+								@RequestParam(required = false, value = "sysUser") String Usuario){
+		
+									System.out.print("\n\n + RestSysUsuarioController listar: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysUsuarioController listar: " + peticion.getHeader("Authorization")+ "\n ");	
+    	Double dUsuario = Double.valueOf(Usuario);
+    	BigDecimal bDUsuario = BigDecimal.valueOf(dUsuario);
+									System.out.print("\n\n + RestSysUsuarioController Usuario: " + Usuario + "\n ");	
+
+    	AnsSysUser respuesta = new AnsSysUser();
+    	respuesta.setCr("00");
+    	respuesta.setDescripcion("Operacion correcta");
+    	respuesta.setContenido(sysUser.findByUsuario(bDUsuario));
+    	if (respuesta.getContenido() == null)
+    	{
+        	respuesta.setCr("01");
+        	respuesta.setDescripcion("Usuario no existente o no activo");
+    	}
+		return (respuesta); 
+	}
+
+
+
+	
+	
 	// Consulta de sys_usuarios con paginacion y validacion de token.
     @GetMapping(path = {"/SysUsPag"})
     public AnsSysUserPagList listarPag(@RequestParam(required = false, value = "page") int page,
