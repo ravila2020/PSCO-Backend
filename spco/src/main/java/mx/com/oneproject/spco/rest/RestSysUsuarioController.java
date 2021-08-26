@@ -6,13 +6,17 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Jwts;
+import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.SysUserPag;
@@ -39,7 +43,7 @@ public class RestSysUsuarioController {
 
 
 
-	// Consulta de la lista de sys_usuarios con validacion de token.
+	// Consulta de un sys_usuarios con validacion de token.
 	@GetMapping(path = {"/SysUs"})
 	public AnsSysUser consultaSysUsuario(HttpServletRequest peticion,
 								@RequestParam(required = false, value = "sysUser") String Usuario){
@@ -63,8 +67,113 @@ public class RestSysUsuarioController {
 	}
 
 
+	// Alta de un sys_usuario con validacion de token.
+	@PostMapping
+	public AnsSysUser altaSysUsuario(HttpServletRequest peticion,
+									@RequestBody SysUsuarios NuevoUsuario){
+		
+									System.out.print("\n\n + RestSysUsuarioController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysUsuarioController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+
+			  // Validación de token    	
+			AnsSysUser respuesta = new AnsSysUser();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysUsuarioController token: " + token + "\n ");
+			if (token != null) {
+				String user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysUsuarioController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+							
+	    	try {
+		    	//-------------existe el uauario?
+				if (sysUser.findByExiste(NuevoUsuario.getIdUsuario())== null)
+				{
+		    	//-------------
+					SysUsuarios usuarioProc = sysUser.save(NuevoUsuario);
+					System.out.print(" + RestAppUserController insertar id: " + usuarioProc.getIdUsuario() + "\n ");
+					respuesta.setCr("00");
+					respuesta.setDescripcion("Correcto");
+					respuesta.setContenido(sysUser.findByExiste(usuarioProc.getIdUsuario()));
+					return respuesta;
+					}
+			        else {
+						respuesta.setCr("83");
+						respuesta.setDescripcion("Ya existe el usuario");
+				        return respuesta;
+			    	}
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
 
 	
+	// borrado logico de un sys_usuario con validacion de token.
+	@DeleteMapping(path = {"/{id}"})
+	public AnsSysUser bajaSysUsuario(HttpServletRequest peticion,
+			 						@PathVariable("id") String id){
+		
+									System.out.print("\n\n + RestSysUsuarioController Baja: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysUsuarioController Baja: " + peticion.getHeader("Authorization")+ "\n ");	
+	    	Double DSysUsuario = 0.0;
+	    	DSysUsuario = Double.valueOf(id);
+	    	BigDecimal BDid = BigDecimal.valueOf(DSysUsuario);
+
+			// Validación de token    	
+			AnsSysUser respuesta = new AnsSysUser();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysUsuarioController token: " + token + "\n ");
+			if (token != null) {
+				String user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysUsuarioController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+							
+	    	try {
+		    	//-------------existe el usuario?
+	    		SysUsuarios UsuConsultado = sysUser.findByExiste(BDid);
+				if (UsuConsultado != null)
+				{
+					if (!UsuConsultado.getEstatus().matches("B"))
+					{
+						UsuConsultado.setEstatus("B");
+						SysUsuarios usuarioProc = sysUser.save(UsuConsultado);
+						System.out.print(" + RestAppUserController insertar id: " + usuarioProc.getIdUsuario() + "\n ");
+						respuesta.setCr("00");
+						respuesta.setDescripcion("Correcto");
+						respuesta.setContenido(sysUser.findByExiste(BDid));
+						return respuesta;
+					} else
+					   {
+						respuesta.setCr("80");
+						respuesta.setDescripcion("Usuario  no activo");
+				        return respuesta;						
+					   }
+					}
+			     else {
+						respuesta.setCr("81");
+						respuesta.setDescripcion("No existe el usuario");
+				        return respuesta;
+			    	}
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
 	
 	// Consulta de sys_usuarios con paginacion y validacion de token.
     @GetMapping(path = {"/SysUsPag"})
@@ -138,7 +247,7 @@ public class RestSysUsuarioController {
     }
 	
 	
-	// Consulta de sys_usuarios con paginacion y validacion de token.
+	// Consulta de sys_usuarios-sys_recinto con paginacion y validacion de token.
     @GetMapping(path = {"/RecintPag"})
     public AnsSysUserPagList listarPag(@RequestParam(required = false, value = "page") int page,
     		                    @RequestParam(required = false, value = "perpage") int perPage, 

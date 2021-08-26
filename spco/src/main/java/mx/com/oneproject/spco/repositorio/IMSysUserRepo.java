@@ -18,7 +18,10 @@ public interface IMSysUserRepo extends JpaRepository<SysUsuarios, SysUsuariosId>
 
 	@Query("select m        from SysUsuarios m where m.idUsuario = :clave and m.estatus = 'A'")
 	SysUsuarios findByUsuario(@Param("clave") BigDecimal clave);
-	
+
+	@Query("select m        from SysUsuarios m where m.idUsuario = :clave")
+	SysUsuarios findByExiste(@Param("clave") BigDecimal clave);
+
 	@Query("select count(*) from SysUsuarios m where m.estatus = 'A'")
 	   long countByActivos();
 	
