@@ -21,6 +21,7 @@ import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
+import mx.com.oneproject.spco.respuesta.AnsLogonIn;
 import mx.com.oneproject.spco.respuesta.SysUserPag;
 import mx.com.oneproject.spco.result.AnsSysUser;
 import mx.com.oneproject.spco.result.AnsSysUserPagList;
@@ -100,7 +101,7 @@ public class RestSysUsuarioController {
 				{
 		    	//-------------
 					SysUsuarios usuarioProc = sysUser.save(NuevoUsuario);
-					System.out.print(" + RestAppUserController insertar id: " + usuarioProc.getIdUsuario() + "\n ");
+					System.out.print(" + RestSysUsuarioController insertar id: " + usuarioProc.getIdUsuario() + "\n ");
 					respuesta.setCr("00");
 					respuesta.setDescripcion("Correcto");
 					respuesta.setContenido(sysUser.findByExiste(usuarioProc.getIdUsuario()));
@@ -147,7 +148,7 @@ public class RestSysUsuarioController {
 				{
 		    	//-------------
 					SysUsuarios usuarioProc = sysUser.save(NuevoUsuario);
-					System.out.print(" + RestAppUserController insertar id: " + usuarioProc.getIdUsuario() + "\n ");
+					System.out.print(" + RestSysUsuarioController insertar id: " + usuarioProc.getIdUsuario() + "\n ");
 					respuesta.setCr("00");
 					respuesta.setDescripcion("Correcto");
 					respuesta.setContenido(sysUser.findByExiste(usuarioProc.getIdUsuario()));
@@ -163,7 +164,57 @@ public class RestSysUsuarioController {
 		    	}
 	}
 
-	
+	// Modificacion de un sys_usuario con validacion de token.
+	@PutMapping(path = {"/Pass"})
+	public AnsSysUser modPassSysUser(HttpServletRequest peticion,
+									@RequestBody AnsLogonIn entrada){
+		
+									System.out.print("\n\n + RestSysUsuarioController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysUsuarioController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+			Double dUsuario = Double.valueOf(entrada.getUser());
+			BigDecimal bDUsuario = BigDecimal.valueOf(dUsuario);
+			  // Validación de token    	
+			AnsSysUser respuesta = new AnsSysUser();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysUsuarioController token: " + token + "\n ");
+			if (token != null) {
+				String user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysUsuarioController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+							
+	    	try {
+		    	//-------------existe el usuario?
+	    		SysUsuarios usuarioProc = sysUser.findByExiste(bDUsuario);
+				if (usuarioProc != null)
+				{
+		    	//-------------
+					usuarioProc.setPassword(entrada.getPassword());
+					sysUser.save(usuarioProc);
+					System.out.print(" + RestSysUsuarioController insertar id: " + usuarioProc.getIdUsuario() + "\n ");
+					respuesta.setCr("00");
+					respuesta.setDescripcion("Correcto");
+					respuesta.setContenido(sysUser.findByExiste(usuarioProc.getIdUsuario()));
+					return respuesta;
+					}
+			        else {
+						respuesta.setCr("78");
+						respuesta.setDescripcion("No existe el usuario");
+				        return respuesta;
+			    	}
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
+		
 	// borrado logico de un sys_usuario con validacion de token.
 	@DeleteMapping(path = {"/{id}"})
 	public AnsSysUser bajaSysUsuario(HttpServletRequest peticion,
@@ -201,7 +252,7 @@ public class RestSysUsuarioController {
 					{
 						UsuConsultado.setEstatus("B");
 						SysUsuarios usuarioProc = sysUser.save(UsuConsultado);
-						System.out.print(" + RestAppUserController insertar id: " + usuarioProc.getIdUsuario() + "\n ");
+						System.out.print(" + RestSysUsuarioController insertar id: " + usuarioProc.getIdUsuario() + "\n ");
 						respuesta.setCr("00");
 						respuesta.setDescripcion("Correcto");
 						respuesta.setContenido(sysUser.findByExiste(BDid));
