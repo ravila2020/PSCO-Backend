@@ -6,10 +6,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +25,7 @@ import mx.com.oneproject.spco.respuesta.SysUserPag;
 import mx.com.oneproject.spco.result.AnsSysUser;
 import mx.com.oneproject.spco.result.AnsSysUserPagList;
 
-//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
 @RequestMapping("/SysUser")
 public class RestSysUsuarioController {
@@ -107,6 +109,53 @@ public class RestSysUsuarioController {
 			        else {
 						respuesta.setCr("83");
 						respuesta.setDescripcion("Ya existe el usuario");
+				        return respuesta;
+			    	}
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
+	// Modificacion de un sys_usuario con validacion de token.
+	@PutMapping
+	public AnsSysUser modifSysUsuario(HttpServletRequest peticion,
+									@RequestBody SysUsuarios NuevoUsuario){
+		
+									System.out.print("\n\n + RestSysUsuarioController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysUsuarioController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+
+			  // Validación de token    	
+			AnsSysUser respuesta = new AnsSysUser();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysUsuarioController token: " + token + "\n ");
+			if (token != null) {
+				String user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysUsuarioController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+							
+	    	try {
+		    	//-------------existe el usuario?
+				if (sysUser.findByExiste(NuevoUsuario.getIdUsuario())!= null)
+				{
+		    	//-------------
+					SysUsuarios usuarioProc = sysUser.save(NuevoUsuario);
+					System.out.print(" + RestAppUserController insertar id: " + usuarioProc.getIdUsuario() + "\n ");
+					respuesta.setCr("00");
+					respuesta.setDescripcion("Correcto");
+					respuesta.setContenido(sysUser.findByExiste(usuarioProc.getIdUsuario()));
+					return respuesta;
+					}
+			        else {
+						respuesta.setCr("78");
+						respuesta.setDescripcion("No existe el usuario");
 				        return respuesta;
 			    	}
 		    	} catch (Exception ex) {
