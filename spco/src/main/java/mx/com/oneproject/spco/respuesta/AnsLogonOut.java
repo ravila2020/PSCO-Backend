@@ -8,12 +8,24 @@ public class AnsLogonOut {
 		private String idEmpresa; 
 		private String idRecinto; 
 		private String idUsuario; 
+		private String idPerfil;
 		private boolean authenticated;
 		private boolean bloqueado; 
 		private String estadoUsuario;
 		private String token;
 		
-		
+		public String getCr() {
+			return cr;
+		}
+		public void setCr(String cr) {
+			this.cr = cr;
+		}
+		public String getDescripcion() {
+			return descripcion;
+		}
+		public void setDescripcion(String descripcion) {
+			this.descripcion = descripcion;
+		}
 		public String getIdEmpresa() {
 			return idEmpresa;
 		}
@@ -44,7 +56,7 @@ public class AnsLogonOut {
 		public void setBloqueado(boolean bloqueado) {
 			this.bloqueado = bloqueado;
 		}
-		public String isEstadoUsuario() {
+		public String getEstadoUsuario() {
 			return estadoUsuario;
 		}
 		public void setEstadoUsuario(String estadoUsuario) {
@@ -56,18 +68,13 @@ public class AnsLogonOut {
 		public void setToken(String token) {
 			this.token = token;
 		}
-		public String getCr() {
-			return cr;
+		public String getIdPerfil() {
+			return idPerfil;
 		}
-		public void setCr(String cr) {
-			this.cr = cr;
-		}
-		public String getDescripcion() {
-			return descripcion;
-		}
-		public void setDescripcion(String descripcion) {
-			this.descripcion = descripcion;
-		}
+		public void setIdPerfil(String idPerfil) {
+			this.idPerfil = idPerfil;
+		}		
 
+		
 		
 }

@@ -111,6 +111,7 @@ public class RestLogonController {
 			        		Respuesta.setIdRecinto(String.valueOf(Usuario.getIdRecinto()));
 			        		Respuesta.setIdUsuario(String.valueOf(Usuario.getIdUsuario()));
 			        		Respuesta.setEstadoUsuario(Usuario.getEstatus());
+			        		Respuesta.setIdPerfil(Usuario.getIdPerfil());
 			        		Usuario.setIntentos(BigDecimal.valueOf(0));
 			        		repAppUser.save(Usuario);
 			        		// Se da de alta la vigencia del token
