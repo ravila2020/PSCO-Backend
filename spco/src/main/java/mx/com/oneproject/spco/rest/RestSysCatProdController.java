@@ -7,16 +7,20 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Jwts;
+import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.modelo.SysCatProd;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
 import mx.com.oneproject.spco.repositorio.IMSysCatProdRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.SysCatProdPag;
+import mx.com.oneproject.spco.result.AnsSysCatProd;
 import mx.com.oneproject.spco.result.AnsSysCatProdList;
 import mx.com.oneproject.spco.result.AnsSysCatProdTipo;
 
@@ -31,6 +35,7 @@ public class RestSysCatProdController {
 	
 	@Autowired
 	private IMSysUserRepo sysUser;
+	
 	
 	// Consulta de la lista de sys_usuarios con validacion de token.
 	@GetMapping
@@ -162,4 +167,53 @@ public class RestSysCatProdController {
          return respuesta;
     }
 
+	// Alta de un Producto con validacion de token.
+	@PostMapping
+	public AnsSysCatProd altaSysCatProd(HttpServletRequest peticion,
+									@RequestBody SysCatProd NuevoProducto){
+		
+									System.out.print("\n\n + RestSysCatProdController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysCatProdController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+
+			  // Validación de token    	
+			AnsSysCatProd respuesta = new AnsSysCatProd();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysCatProdController token: " + token + "\n ");
+			if (token != null) {
+				String user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysCatProdController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+							
+	    	try {
+		    	//-------------existe el producto?
+				if (sysProd.findByProducto(NuevoProducto.getClveProduc(), NuevoProducto.getEmpresa(), NuevoProducto.getRecinto()) == null)
+				{
+		    	//-------------
+					SysCatProd productoProc = sysProd.save(NuevoProducto);
+					System.out.print(" + RestSysCatProdController insertar Producto: " + productoProc.getClveProduc() + "\n ");
+					respuesta.setCr("00");
+					respuesta.setDescripcion("Correcto");
+					respuesta.setContenido(NuevoProducto);
+					return respuesta;
+					}
+			        else {
+						respuesta.setCr("83");
+						respuesta.setDescripcion("Ya existe empresa / recinto / producto");
+				        return respuesta;
+			    	}
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
+    
+    
 }
