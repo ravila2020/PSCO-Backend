@@ -21,8 +21,4 @@ public class SysDecId  implements Serializable {
 		this.idRecinto = idRecinto;
 	} 
 
-	
-	
-	
-	
 }

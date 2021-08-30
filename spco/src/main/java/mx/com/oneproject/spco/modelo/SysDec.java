@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @IdClass(SysDecId.class)
-@Table(name = "SYS_RECINTOS")
+@Table(name = "SYS_DEC01")
 public class SysDec {
 
 	@Id
