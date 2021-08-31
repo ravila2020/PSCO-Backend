@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
+import mx.com.oneproject.spco.modelo.DetCatAp;
 import mx.com.oneproject.spco.modelo.SysCatProd;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
+import mx.com.oneproject.spco.repositorio.IMDetCatApRepo;
 import mx.com.oneproject.spco.repositorio.IMSysCatProdRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.SysCatProdPag;
@@ -40,6 +42,8 @@ public class RestSysCatProdController {
 	@Autowired
 	private IMSysUserRepo sysUser;
 	
+	@Autowired
+	private IMDetCatApRepo RepoDetCatAp;
 	
 	// Consulta de la lista de sys_usuarios con validacion de token.
 	@GetMapping
@@ -290,6 +294,8 @@ public class RestSysCatProdController {
          Acumulado.uMDescripcion =  new ArrayList<String>();
          Acumulado.uMDescripcion.clear();
          
+         String uMDescrip = new String();
+         DetCatAp apendice07 = new DetCatAp();
   //       Acumulado.uMDescripcion = new SysCatProdUm();
   //       Acumulado.uMDescripcion = new 
          SysCatProdUm elementoItem = new SysCatProdUm();
@@ -298,11 +304,14 @@ public class RestSysCatProdController {
         	 if(i>=sysCatProdInicial && i<=sysCatProdFinal)
         	 {
         		 sysCatProdCero = todosSysCatProd.get(i);
+        		 														System.out.print("\n " + "          + RestSysCatProdController UM: " +  sysCatProdCero.getuM() + "\n ");
+        		 apendice07 = RepoDetCatAp.findByCampos("AP07", sysCatProdCero.getuM(), "X");
+        		 uMDescrip = apendice07.getDesCorta();
         		 paginaSysCatProds.add(sysCatProdCero);
         		 elementoItem.setObjetoItem(sysCatProdCero);
-        		 elementoItem.setuMDescripcion("unidad de medidita :" + i);
+        		 elementoItem.setuMDescripcion(uMDescrip);
         		 Acumulado.objetoItem.add(sysCatProdCero);
-        		 Acumulado.uMDescripcion.add("unidad de medidita :" + i);
+        		 Acumulado.uMDescripcion.add(uMDescrip);
       //  		 Acumulado.ListaProductosUm.add(i,elementoItem);
       //  		 Acumulado.ListaProductosUm.add(elementoItem);
         		 System.out.print("  -- En lista  --" + sysCatProdCero.getClveProduc() );
