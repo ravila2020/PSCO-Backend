@@ -23,5 +23,10 @@ public interface IMSysCatProdRepo extends JpaRepository<SysCatProd, String>{
 	@Query("select m        from SysCatProd m where m.clveProduc = :clave and m.empresa = :empresa and m.recinto = :recinto")
 	   SysCatProd   findByProducto(@Param("clave") String clave, @Param("empresa") BigDecimal empresa, @Param("recinto") BigDecimal recinto);
 
+	@Query("select m        from SysCatProd m where m.clveProduc = :clave and m.empresa = :empresa and m.recinto = :recinto")
+	List<SysCatProd> findByClave(@Param("clave") String clave, @Param("empresa") BigDecimal empresa, @Param("recinto") BigDecimal recinto);
+
+	@Query("select count(*) from SysCatProd m where m.clveProduc = :clave and m.empresa = :empresa and m.recinto = :recinto")
+	long countByClave(@Param("clave") String clave, @Param("empresa") BigDecimal empresa, @Param("recinto") BigDecimal recinto);
 
 }
