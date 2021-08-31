@@ -30,6 +30,7 @@ import mx.com.oneproject.spco.result.AnsSysCatProd;
 import mx.com.oneproject.spco.result.AnsSysCatProdList;
 import mx.com.oneproject.spco.result.AnsSysCatProdListUm;
 import mx.com.oneproject.spco.result.AnsSysCatProdTipo;
+import mx.com.oneproject.spco.result.AnsSysCatProdUm;
 
 @CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
@@ -478,9 +479,7 @@ public class RestSysCatProdController {
    
 	// Consulta de sys_usuarios-sys_recinto con paginacion y validacion de token.
     @GetMapping(path = {"/ProdUnicoUm"})
-    public AnsSysCatProdListUm listarUnicoUm(@RequestParam(required = false, value = "page") int page,
-    		                    @RequestParam(required = false, value = "perpage") int perPage, 
-    		                    @RequestParam(required = false, value = "clave") String clave,
+    public AnsSysCatProdUm listarUnicoUm(@RequestParam(required = false, value = "clave") String clave,
     		                    HttpServletRequest peticion) {
 		/*
 		 * BigDecimal limInferior = BigDecimal.valueOf(0.0); BigDecimal limSuperior =
@@ -490,7 +489,10 @@ public class RestSysCatProdController {
 		 * else { limInferior = BigDecimal.valueOf(0.0); limSuperior =
 		 * BigDecimal.valueOf(99999999.0); }
 		 */    	
-    // Validación de token
+    	int page = 1;
+    	int perPage = 1;
+		 AnsSysCatProdUm Producto = new AnsSysCatProdUm();
+    	// Validación de token
     	String user;
     	AnsSysCatProdListUm respuesta = new AnsSysCatProdListUm();
     	String token = peticion.getHeader("Authorization");
@@ -505,7 +507,10 @@ public class RestSysCatProdController {
 		}	else	{
 			respuesta.setCr("99");
 			respuesta.setDescripcion("Petición sin token");		
-			return respuesta;
+
+			 Producto.setCr(respuesta.getCr());
+			 Producto.setDescripcion(respuesta.getDescripcion());
+				return Producto;
 			}
 	// parametros empresa y recinto del usuario
 		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
@@ -566,8 +571,8 @@ public class RestSysCatProdController {
         		 elementoItem.setuMDescripcion(uMDescrip);
         		 Acumulado.objetoItem.add(sysCatProdCero);
         		 Acumulado.uMDescripcion.add(uMDescrip);
-      //  		 Acumulado.ListaProductosUm.add(i,elementoItem);
-      //  		 Acumulado.ListaProductosUm.add(elementoItem);
+        		 Producto.setContenido(sysCatProdCero);
+        		 Producto.setuMDescripcion(uMDescrip);
         		 System.out.print("  -- En lista  --" + sysCatProdCero.getClveProduc() );
         	 }
          }
@@ -579,9 +584,7 @@ public class RestSysCatProdController {
          resultado.setTotal((int) sysProd.countByClave(clave,empresa,recinto));
          resultado.setTotalPages(pagEntero);
          resultado.setSysCatProductos(paginaSysCatProds);
-	// 	 respuesta.setContenido(resultado);
-	//x 	 respuesta.ListaProductosUm.add(resultado);
-         
+        
 	 	 respuesta.setPage(page);
 	 	 respuesta.setPerPage(perPage);
 	     respuesta.setTotal(resultado.getTotal());
@@ -591,7 +594,13 @@ public class RestSysCatProdController {
 	 	 
 		 respuesta.setCr("00");
 		 respuesta.setDescripcion("Correcto");
-         return respuesta;
+		 
+
+		 Producto.setCr(respuesta.getCr());
+		 Producto.setDescripcion(respuesta.getDescripcion());
+
+		 
+         return Producto;
     }
 
      
