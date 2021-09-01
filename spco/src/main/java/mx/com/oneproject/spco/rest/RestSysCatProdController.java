@@ -7,7 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -603,5 +603,66 @@ public class RestSysCatProdController {
          return Producto;
     }
 
-     
+	// Consulta de Productos  con paginacion y validacion de token.
+    @DeleteMapping(path = {"/ProdUnico"})
+    public AnsSysCatProdList eliminarProducto(@RequestParam(required = false, value = "clave") String clave,
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysCatProdList respuesta = new AnsSysCatProdList();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysCatProdController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysCatProdController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+	// Preparación de la paginación.
+		Long todos = (long) 0;
+    // obtener el total de sys_usuarios
+         todos = sysProd.countByClave(clave,empresa,recinto);
+         SysCatProd productoABorrar = sysProd.findByClaves(clave, empresa, recinto);
+       																System.out.print(" + RestSysCatProdController listarPag todos: " + todos +"\n ");
+	 try {
+		if (todos == 1)
+	         {
+			//   sysProd.deleteById(clave); 
+			//   sysProd.deleteByProducto(clave, empresa, recinto);
+			     sysProd.delete(productoABorrar);
+	        	 respuesta.setCr("00");
+	    		 respuesta.setDescripcion("Correcto");
+	             return respuesta;         
+	         } else 
+		         {
+		        	 if (todos > 1) 
+		        	 {
+			    		 respuesta.setCr("97");
+			    		 respuesta.setDescripcion("Hay más de un producto");
+			             return respuesta;
+		        		 
+		        	 }
+		        	 else 
+		        	 {
+			    		 respuesta.setCr("98");
+			    		 respuesta.setDescripcion("No hay producto");
+			             return respuesta;
+		        	 }
+		         }
+	    } catch (Exception ex) {
+			throw new ApiRequestException("Upsi");
+		}
+    }
+
+    
 }

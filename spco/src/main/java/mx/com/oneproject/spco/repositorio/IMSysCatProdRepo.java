@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -26,7 +27,14 @@ public interface IMSysCatProdRepo extends JpaRepository<SysCatProd, String>{
 	@Query("select m        from SysCatProd m where m.clveProduc = :clave and m.empresa = :empresa and m.recinto = :recinto")
 	List<SysCatProd> findByClave(@Param("clave") String clave, @Param("empresa") BigDecimal empresa, @Param("recinto") BigDecimal recinto);
 
+	@Query("select m        from SysCatProd m where m.clveProduc = :clave and m.empresa = :empresa and m.recinto = :recinto")
+	SysCatProd findByClaves(@Param("clave") String clave, @Param("empresa") BigDecimal empresa, @Param("recinto") BigDecimal recinto);
+	
 	@Query("select count(*) from SysCatProd m where m.clveProduc = :clave and m.empresa = :empresa and m.recinto = :recinto")
 	long countByClave(@Param("clave") String clave, @Param("empresa") BigDecimal empresa, @Param("recinto") BigDecimal recinto);
+
+	@Modifying
+	@Query("delete          from SysCatProd m where m.clveProduc = :clave and m.empresa = :empresa and m.recinto = :recinto")
+	int  deleteByProducto(@Param("clave") String clave, @Param("empresa") BigDecimal empresa, @Param("recinto") BigDecimal recinto);
 
 }
