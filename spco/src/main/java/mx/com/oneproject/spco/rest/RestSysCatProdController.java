@@ -573,7 +573,15 @@ public class RestSysCatProdController {
         		 sysCatProdCero = todosSysCatProd.get(i);
         		 														System.out.print("\n " + "          + RestSysCatProdController UM: " +  sysCatProdCero.getuM() + "\n ");
         		 apendice07 = RepoDetCatAp.findByCampos("AP07", sysCatProdCero.getuM(), "X");
-        		 uMDescrip = apendice07.getDesCorta();
+        		 if (apendice07 == null)
+	      		   {
+        			 	uMDescrip = "Sin descripción"; 
+	      			 }
+	      		 else
+		      		 {
+		      			 uMDescrip = apendice07.getDesCorta();
+		      		 }
+        	//	 uMDescrip = apendice07.getDesCorta();
         		 paginaSysCatProds.add(sysCatProdCero);
         		 elementoItem.setObjetoItem(sysCatProdCero);
         		 elementoItem.setuMDescripcion(uMDescrip);
