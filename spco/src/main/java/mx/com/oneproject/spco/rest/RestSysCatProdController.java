@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -355,7 +356,14 @@ public class RestSysCatProdController {
         		 sysCatProdCero = todosSysCatProd.get(i);
         		 														System.out.print("\n " + "          + RestSysCatProdController UM: " +  sysCatProdCero.getuM() + "\n ");
         		 apendice07 = RepoDetCatAp.findByCampos("AP07", sysCatProdCero.getuM(), "X");
-        		 uMDescrip = apendice07.getDesCorta();
+        		 if (apendice07 == null)
+        		   {
+        			 uMDescrip = "Sin descripción"; 
+        			 }
+        		 else
+        		 {
+        			 uMDescrip = apendice07.getDesCorta();
+        		 }
         		 paginaSysCatProds.add(sysCatProdCero);
         		 elementoItem.setObjetoItem(sysCatProdCero);
         		 elementoItem.setuMDescripcion(uMDescrip);
