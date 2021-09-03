@@ -52,8 +52,8 @@ public class RestSysCatProdController {
 	@GetMapping
 	public List<SysCatProd> listar(HttpServletRequest peticion){
 		
-		System.out.print("\n\n + RestSysCatProdRepo listar: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
-		System.out.print("\n\n + RestSysCatProdRepo listar: " + peticion.getHeader("Authorization")+ "\n ");	
+		System.out.print("\n\n + RestSysCatProdController listar: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+		System.out.print("\n\n + RestSysCatProdController listar: " + peticion.getHeader("Authorization")+ "\n ");	
 		
 		return sysProd.findAll();
 	}
@@ -62,20 +62,20 @@ public class RestSysCatProdController {
 	@GetMapping(path = {"/TiposProd"})
 	public AnsSysCatProdTipo Tipos(HttpServletRequest peticion){
 		
-		System.out.print("\n\n + RestSysCatProdRepo listar: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
-		System.out.print("\n\n + RestSysCatProdRepo listar: " + peticion.getHeader("Authorization")+ "\n ");	
+		System.out.print("\n\n + RestSysCatProdController listar: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+		System.out.print("\n\n + RestSysCatProdController listar: " + peticion.getHeader("Authorization")+ "\n ");	
 		AnsSysCatProdTipo respuesta = new AnsSysCatProdTipo();
 
 		  // Validación de token    	
 		String token = peticion.getHeader("Authorization");
-                                                              		System.out.print("\n\n + RestSysCatProdRepo token: " + token + "\n ");
+                                                              		System.out.print("\n\n + RestSysCatProdController token: " + token + "\n ");
 		if (token != null) {
 			String user = Jwts.parser()
 					.setSigningKey("0neProj3ct")
 					.parseClaimsJws(token.replace("Bearer",  ""))
 					.getBody()
 					.getSubject();
-                                                          			System.out.print("\n\n + RestSysCatProdRepo Usuario: " + user + "\n ");
+                                                          			System.out.print("\n\n + RestSysCatProdController Usuario: " + user + "\n ");
 		}	else	{
 			respuesta.setCr("99");
 			respuesta.setDescripcion("Petición sin token");		
