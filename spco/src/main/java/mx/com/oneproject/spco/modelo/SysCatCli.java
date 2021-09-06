@@ -14,301 +14,302 @@ public class SysCatCli {
 
 	@Id
 	@Column(name = "Id_Cli_Prov", nullable = false, length = 10)
-	private String IdCliProv;
+	private String idCliProv;
 	
 	@Column(name= "Nom_Denom"   ,nullable = false ,length = 120)	
-	private String NomDenov;
+	private String nomDenov;
 	
 	@Column(name= "Nom_Contacto"   ,nullable = false ,length = 120)	
-	private String NomContacto;
+	private String nomContacto;
 	
 	@Column(name= "Nal"   ,nullable = false ,length = 10)
-	private String Nal;
+	private String nal;
 	
 	@Column(name= "IMMEX_CVE_REC"   ,nullable = false )
-	private BigDecimal ImmexCveRec;
+	private BigDecimal immexCveRec;
 	
 	@Column(name= "ID_TAX"   ,nullable = false ,length = 20)
-	private String IdTax;
+	private String idTax;
 
 	@Column(name= "RFC"   ,nullable = false ,length = 13)
-	private String Rfc;
+	private String rFC;
 	
 	@Column(name= "CURP"   ,nullable = false ,length = 18)
-	private String Curp;
+	private String cURP;
 	
 	@Column(name= "Pais"   ,nullable = false ,length = 3)
-	private String País;
+	private String país;
 	
 	@Column(name= "Calle"   ,nullable = false ,length = 80)
-	private String Calle;
+	private String calle;
 	
 	@Column(name= "Num_Ext"   ,nullable = false ,length = 10)
-	private String NumExt;
+	private String numExt;
 	
 	@Column(name= "Num_Inte"   ,nullable = false ,length = 10)
-	private String NumInte;
+	private String numInte;
 	
 	@Column(name= "C_P"   ,nullable = false ,length = 5)
-	private String CP;
+	private String cP;
 	
 	@Column(name= "Colonia"   ,nullable = false ,length = 80)
-	private String Colonia;
+	private String colonia;
 	
 	@Column(name= "Estado"   ,nullable = false ,length = 3)
-	private String Estado;
+	private String estado;
 	
 	@Column(name= "Municipio"   ,nullable = false ,length = 3)
-	private String Municipio;
+	private String municipio;
 	
 	@Column(name= "Localidad"   ,nullable = false ,length = 4)
-	private String Localidad;
+	private String localidad;
 	
 	@Column(name= "E_Mail"   ,nullable = false ,length = 40)
-	private String EMail;
+	private String eMail;
 	
 	@Column(name= "Tel"   ,nullable = false ,length = 20)
-	private BigDecimal Tel;
+	private BigDecimal tel;
 	
 	@Column(name= "Ind_Act"   ,nullable = false ,length = 1)
-	private String IndAct;
+	private String indAct;
 	
 	@Column(name= "Tipo"   ,nullable = false ,length = 1)
-	private String Tipo;
+	private String tipo;
 	
 	@Column(name= "Empresa"   ,nullable = false ,length = 4)
-	private String Empresa;
-	
+	private String empresa;
+
 	@Column(name= "Recinto"   ,nullable = false ,length = 4)
-	private String Recinto;
+	private String recinto;
 	
 	@Column(name= "Fecha_Alta"   ,nullable = false )
-	private Date FechaAlta;
+	private Date fechaAlta;
 	
 	@Column(name= "Fecha_Mod"   ,nullable = false )
-	private Date FechaMod;
+	private Date fechaMod;
 	
 	@Column(name= "HORA"   ,nullable = false ,length = 8)
-	private String Hora;
+	private String hora;
 	
 	@Column(name= "USER_Mod"   ,nullable = false ,length = 8)
-	private String UserMod;
+	private String userMod;
 
 	public String getIdCliProv() {
-		return IdCliProv;
+		return idCliProv;
 	}
 
 	public void setIdCliProv(String idCliProv) {
-		IdCliProv = idCliProv;
+		this.idCliProv = idCliProv;
 	}
 
 	public String getNomDenov() {
-		return NomDenov;
+		return nomDenov;
 	}
 
 	public void setNomDenov(String nomDenov) {
-		NomDenov = nomDenov;
+		this.nomDenov = nomDenov;
 	}
 
 	public String getNomContacto() {
-		return NomContacto;
+		return nomContacto;
 	}
 
 	public void setNomContacto(String nomContacto) {
-		NomContacto = nomContacto;
+		this.nomContacto = nomContacto;
 	}
 
 	public String getNal() {
-		return Nal;
+		return nal;
 	}
 
 	public void setNal(String nal) {
-		Nal = nal;
+		this.nal = nal;
 	}
 
 	public BigDecimal getImmexCveRec() {
-		return ImmexCveRec;
+		return immexCveRec;
 	}
 
 	public void setImmexCveRec(BigDecimal immexCveRec) {
-		ImmexCveRec = immexCveRec;
+		this.immexCveRec = immexCveRec;
 	}
 
 	public String getIdTax() {
-		return IdTax;
+		return idTax;
 	}
 
 	public void setIdTax(String idTax) {
-		IdTax = idTax;
+		this.idTax = idTax;
 	}
 
-	public String getRfc() {
-		return Rfc;
+	public String getrFC() {
+		return rFC;
 	}
 
-	public void setRfc(String rfc) {
-		Rfc = rfc;
+	public void setrFC(String rFC) {
+		this.rFC = rFC;
 	}
 
-	public String getCurp() {
-		return Curp;
+	public String getcURP() {
+		return cURP;
 	}
 
-	public void setCurp(String curp) {
-		Curp = curp;
+	public void setcURP(String cURP) {
+		this.cURP = cURP;
 	}
 
 	public String getPaís() {
-		return País;
+		return país;
 	}
 
 	public void setPaís(String país) {
-		País = país;
+		this.país = país;
 	}
 
 	public String getCalle() {
-		return Calle;
+		return calle;
 	}
 
 	public void setCalle(String calle) {
-		Calle = calle;
+		this.calle = calle;
 	}
 
 	public String getNumExt() {
-		return NumExt;
+		return numExt;
 	}
 
 	public void setNumExt(String numExt) {
-		NumExt = numExt;
+		this.numExt = numExt;
 	}
 
 	public String getNumInte() {
-		return NumInte;
+		return numInte;
 	}
 
 	public void setNumInte(String numInte) {
-		NumInte = numInte;
+		this.numInte = numInte;
 	}
 
-	public String getCP() {
-		return CP;
+	public String getcP() {
+		return cP;
 	}
 
-	public void setCP(String cP) {
-		CP = cP;
+	public void setcP(String cP) {
+		this.cP = cP;
 	}
 
 	public String getColonia() {
-		return Colonia;
+		return colonia;
 	}
 
 	public void setColonia(String colonia) {
-		Colonia = colonia;
+		this.colonia = colonia;
 	}
 
 	public String getEstado() {
-		return Estado;
+		return estado;
 	}
 
 	public void setEstado(String estado) {
-		Estado = estado;
+		this.estado = estado;
 	}
 
 	public String getMunicipio() {
-		return Municipio;
+		return municipio;
 	}
 
 	public void setMunicipio(String municipio) {
-		Municipio = municipio;
+		this.municipio = municipio;
 	}
 
 	public String getLocalidad() {
-		return Localidad;
+		return localidad;
 	}
 
 	public void setLocalidad(String localidad) {
-		Localidad = localidad;
+		this.localidad = localidad;
 	}
 
-	public String getEMail() {
-		return EMail;
+	public String geteMail() {
+		return eMail;
 	}
 
-	public void setEMail(String eMail) {
-		EMail = eMail;
+	public void seteMail(String eMail) {
+		this.eMail = eMail;
 	}
 
 	public BigDecimal getTel() {
-		return Tel;
+		return tel;
 	}
 
 	public void setTel(BigDecimal tel) {
-		Tel = tel;
+		this.tel = tel;
 	}
 
 	public String getIndAct() {
-		return IndAct;
+		return indAct;
 	}
 
 	public void setIndAct(String indAct) {
-		IndAct = indAct;
+		this.indAct = indAct;
 	}
 
 	public String getTipo() {
-		return Tipo;
+		return tipo;
 	}
 
 	public void setTipo(String tipo) {
-		Tipo = tipo;
+		this.tipo = tipo;
 	}
 
 	public String getEmpresa() {
-		return Empresa;
+		return empresa;
 	}
 
 	public void setEmpresa(String empresa) {
-		Empresa = empresa;
+		this.empresa = empresa;
 	}
 
 	public String getRecinto() {
-		return Recinto;
+		return recinto;
 	}
 
 	public void setRecinto(String recinto) {
-		Recinto = recinto;
+		this.recinto = recinto;
 	}
 
 	public Date getFechaAlta() {
-		return FechaAlta;
+		return fechaAlta;
 	}
 
 	public void setFechaAlta(Date fechaAlta) {
-		FechaAlta = fechaAlta;
+		this.fechaAlta = fechaAlta;
 	}
 
 	public Date getFechaMod() {
-		return FechaMod;
+		return fechaMod;
 	}
 
 	public void setFechaMod(Date fechaMod) {
-		FechaMod = fechaMod;
+		this.fechaMod = fechaMod;
 	}
 
 	public String getHora() {
-		return Hora;
+		return hora;
 	}
 
 	public void setHora(String hora) {
-		Hora = hora;
+		this.hora = hora;
 	}
 
 	public String getUserMod() {
-		return UserMod;
+		return userMod;
 	}
 
 	public void setUserMod(String userMod) {
-		UserMod = userMod;
+		this.userMod = userMod;
 	}
+
 
 	
 }
