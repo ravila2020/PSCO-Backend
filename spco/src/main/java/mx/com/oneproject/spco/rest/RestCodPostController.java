@@ -33,18 +33,18 @@ public class RestCodPostController {
 			System.out.print("\n\n + RestcodPoslController listar: " + peticion.getHeader("Authorization")+ "\n ");	
 			
 			AnsCodPostal resultado = new AnsCodPostal();
-			Optional<CodPost> informacionCP = codPostal.findById(cp);
-			if(informacionCP.isPresent())
+			Optional<CodPost> informacionCP = codPostal.findByCodigo(cp);
+			if(informacionCP.isEmpty())
+			{
+				resultado.setCr("99");
+				resultado.setDescripcion("Sin información");
+			}
+			else
 			{
 				resultado.setCr("00");
 				resultado.setDescripcion("Correcto");
 			//	resultado.setContenido(informacionCP.get());
 				resultado.setContenido(informacionCP);
-			}
-			else
-			{
-				resultado.setCr("99");
-				resultado.setDescripcion("Sin información");
 			}
 			
 			return resultado;

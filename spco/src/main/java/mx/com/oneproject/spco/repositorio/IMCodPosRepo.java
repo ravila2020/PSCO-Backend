@@ -1,5 +1,7 @@
 package mx.com.oneproject.spco.repositorio;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,5 +18,8 @@ public interface IMCodPosRepo extends JpaRepository<CodPost, String>{
 
 	@Query("select distinct (m.dMnpio) from CodPost m where  m.cMnpio = :claveMpio and m.cCveCiudad = :claveCd and  m.cEstado = :claveEdo")
 	String findByClaveMpio(@Param("claveMpio") String claveMpio, @Param("claveCd") String claveCd, @Param("claveEdo") String claveEdo);
+
+	@Query("select m from CodPost m where  m.dCodigo = :codigo")
+	Optional<CodPost> findByCodigo(@Param("codigo") String codigo);
 
 }

@@ -9,6 +9,7 @@ public class AnsCodPostal {
 	private String cr;
 	private String descripcion;
 	private Optional<CodPost> contenido;
+	
 	public String getCr() {
 		return cr;
 	}
