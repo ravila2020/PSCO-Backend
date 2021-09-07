@@ -19,6 +19,7 @@ import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.modelo.SysCatCli;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
+import mx.com.oneproject.spco.repositorio.IMCodPosRepo;
 import mx.com.oneproject.spco.repositorio.IMSysCatCliRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.SysCatCliPag;
@@ -36,6 +37,10 @@ public class RestSysCliController {
 
 	@Autowired
 	private IMSysUserRepo sysUser;
+	
+	@Autowired
+	private IMCodPosRepo codigoPostal;
+	
 
 	// Consulta de la lista de sys_usuarios con validacion de token.
 	@GetMapping
@@ -287,7 +292,15 @@ public class RestSysCliController {
 //         resultado.setTotalPages(pagEntero);
 //         resultado.setSysCatClientes(paginaSysCatClientes);
 		 if (todos.isPresent()) {
-			 respuesta.setContenido(todos.get());
+			 SysCatCli actual = todos.get();
+			 String estadoDesc = codigoPostal.findByClaveEstado(actual.getEstado());
+			 String estadoCd   = codigoPostal.findByClaveCd(actual.getLocalidad(),actual.getEstado());
+			 String estadoMpio = codigoPostal.findByClaveMpio(actual.getMunicipio(),actual.getLocalidad(),actual.getEstado());
+			 															System.out.print("\n + RestSysCliController listarPag estado: " + estadoDesc + " - " + estadoCd + " - "  + estadoMpio  +"\n ");
+			 actual.setEstado(estadoDesc);
+			 actual.setMunicipio(estadoMpio);
+			 actual.setLocalidad(estadoCd);
+			 respuesta.setContenido(actual);
 			 respuesta.setCr("00");
 			 respuesta.setDescripcion("Correcto");
 		 } else
