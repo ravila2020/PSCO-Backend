@@ -1,13 +1,14 @@
 package mx.com.oneproject.spco.result;
 
+import java.util.Optional;
+
 import mx.com.oneproject.spco.modelo.CodPost;
 
 public class AnsCodPostal {
 
 	private String cr;
 	private String descripcion;
-	private CodPost contenido;
-	
+	private Optional<CodPost> contenido;
 	public String getCr() {
 		return cr;
 	}
@@ -20,11 +21,14 @@ public class AnsCodPostal {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	public CodPost getContenido() {
+	public Optional<CodPost> getContenido() {
 		return contenido;
 	}
-	public void setContenido(CodPost contenido) {
+	public void setContenido(Optional<CodPost> contenido) {
 		this.contenido = contenido;
 	}
 	
+	
+	
+
 }

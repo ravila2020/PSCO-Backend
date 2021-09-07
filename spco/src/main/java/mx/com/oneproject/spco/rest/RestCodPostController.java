@@ -38,7 +38,8 @@ public class RestCodPostController {
 			{
 				resultado.setCr("00");
 				resultado.setDescripcion("Correcto");
-				resultado.setContenido(informacionCP.get());
+			//	resultado.setContenido(informacionCP.get());
+				resultado.setContenido(informacionCP);
 			}
 			else
 			{
