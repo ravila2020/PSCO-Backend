@@ -1,6 +1,5 @@
 package mx.com.oneproject.spco.repositorio;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +10,7 @@ import mx.com.oneproject.spco.modelo.SysCatCli;
 
 public interface IMSysCatCliRepo extends JpaRepository<SysCatCli, String> {
 
-	@Query("select distinct (m.tipo) from SysCatCli m ")
+	@Query("select distinct (m.Tipo) from SysCatCli m ")
 	List<String> findByDistTipos();	
 	/*
 	@Query("select count(*) from SysCatCli m where m.tipo = :tipo and m.empresa = :empresa and m.recinto = :recinto")
@@ -21,10 +20,10 @@ public interface IMSysCatCliRepo extends JpaRepository<SysCatCli, String> {
 	List<SysCatCli> findByTipos(@Param("tipo") String tipo, @Param("empresa") BigDecimal empresa, @Param("recinto") BigDecimal recinto);
 */
 
-	@Query("select count(*) from SysCatCli m where m.tipo = :tipo")
+	@Query("select count(*) from SysCatCli m where m.Tipo = :tipo")
 	long countByTipos(@Param("tipo") String tipo);
 	
-	@Query("select m        from SysCatCli m where m.tipo = :tipo")
+	@Query("select m        from SysCatCli m where m.Tipo = :tipo")
 	List<SysCatCli> findByTipos(@Param("tipo") String tipo);
 
 
