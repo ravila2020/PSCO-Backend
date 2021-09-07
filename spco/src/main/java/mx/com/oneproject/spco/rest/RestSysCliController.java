@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,7 +53,12 @@ public class RestSysCliController {
 		return sysCli.findAll();
 	}
 
-	// Alta de un Producto con validacion de token.
+	/**
+	 * Esta clase define el método de alta de un cliente especifico
+	 * @author: Roberto Avila
+	 * @version: 01/09/2021/A
+	 * @see 
+	 */	
 	@PostMapping
 	public AnsSysCatCli altaSysCatCli(HttpServletRequest peticion,
 									@RequestBody SysCatCli NuevoCliente){
@@ -78,7 +84,7 @@ public class RestSysCliController {
 				}
 							
 	    	try {
-		    	//-------------existe el producto?
+		    	//-------------existe el cliente?
 				if (sysCli.findById(NuevoCliente.getIdCliProv()).isEmpty())
 				{
 		    	//-------------
@@ -92,6 +98,58 @@ public class RestSysCliController {
 			        else {
 						respuesta.setCr("83");
 						respuesta.setDescripcion("Ya existe cliente");
+				        return respuesta;
+			    	}
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
+	/**
+	 * Esta clase define el método de modificación de un cliente especifico
+	 * @author: Roberto Avila
+	 * @version: 01/09/2021/A
+	 * @see 
+	 */	
+	@PutMapping
+	public AnsSysCatCli modifSysCatCli(HttpServletRequest peticion,
+									@RequestBody SysCatCli NuevoCliente){
+		
+									System.out.print("\n\n + RestSysCliController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysCliController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+
+			  // Validación de token    	
+			AnsSysCatCli respuesta = new AnsSysCatCli();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysCliController token: " + token + "\n ");
+			if (token != null) {
+				String user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysCliController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+							
+	    	try {
+		    	//-------------existe el cliente?
+				if (sysCli.findById(NuevoCliente.getIdCliProv()).isPresent())
+				{
+		    	//-------------
+					SysCatCli clienteProc = sysCli.save(NuevoCliente);
+					System.out.print(" + RestSysCliController insertar Cliente: " + clienteProc.getNomDenov() + "\n ");
+					respuesta.setCr("00");
+					respuesta.setDescripcion("Correcto");
+					respuesta.setContenido(NuevoCliente);
+					return respuesta;
+					}
+			        else {
+						respuesta.setCr("83");
+						respuesta.setDescripcion("No existe el cliente");
 				        return respuesta;
 			    	}
 		    	} catch (Exception ex) {
@@ -248,49 +306,7 @@ public class RestSysCliController {
 		String recintoS = recinto.toString();
 		String empresaS = empresa.toString();
 	// Preparación de la paginación.
-//		boolean enabled = true;
-//		SysCatCli sysCatCliCero = new SysCatCli();
-//		Long todos = (long) 0;
-//		double paginas = (float) 0.0;
-//		Integer pagEntero = 0;
-//		List<SysCatCli> todosSysCatCli;
-//		List<SysCatCli> paginaSysCatClientes; 
-//		Integer sysCatCliInicial, sysCatCliFinal;
-//		
-//		SysCatCliPag resultado = new SysCatCliPag();
-    //                                                                     	System.out.print(" + RestSysCliController listarPag page: " + page + " perpage: " + perPage + " tipo: " + tipo  +"\n ");
-    // obtener el total de sys_usuarios
-		 
 		 Optional<SysCatCli> todos = sysCli.findById(cliente);
-//         paginas = (double) todos / perPage;
-//         pagEntero = (int) paginas;
-//         if ((paginas-pagEntero)>0)
-//         {
-//        	 pagEntero++;
-//         }
-//    // Obtener la lista de sys_usuarios solicitada 
-//         sysCatCliInicial = (perPage  * (page - 1) );
-//         sysCatCliFinal   = (sysCatCliInicial + perPage) - 1;
-//         todosSysCatCli  = sysCli.findByTipos(tipo); //,empresa,recinto);
-//         paginaSysCatClientes = sysCli.findByTipos(tipo);   //,empresa,recinto);
-//         paginaSysCatClientes.clear();
-//         for (int i=0; i<todos;i++) {
-//        	 															System.out.print("\n " + "          + RestSysCliController Apendice: " + i + " - " + todosSysCatCli.get(i).getEmpresa());
-//        	 if(i>=sysCatCliInicial && i<=sysCatCliFinal)
-//        	 {
-//        		 sysCatCliCero = todosSysCatCli.get(i);
-//        		 paginaSysCatClientes.add(sysCatCliCero);
-//        		 System.out.print("  -- En lista  --" + sysCatCliCero.getIdCliProv());
-//        	 }
-//         }
-//         
-//         																System.out.print("\n + RestSysCliController listarPag todos: " + todos + " paginas: " + paginas + "  " + (paginas-pagEntero ) +"\n ");
-//         //
-//         resultado.setPage(page);
-//         resultado.setPerPage(perPage);
-//         resultado.setTotal((int) sysCli.countByTipos(tipo));   // , empresa, recinto));	
-//         resultado.setTotalPages(pagEntero);
-//         resultado.setSysCatClientes(paginaSysCatClientes);
 		 if (todos.isPresent()) {
 			 SysCatCli actual = todos.get();
 			 String estadoDesc = codigoPostal.findByClaveEstado(actual.getEstado());
@@ -311,6 +327,59 @@ public class RestSysCliController {
          return respuesta;
     }
 
+	/**
+	 * Esta clase define el método de alta de un cliente especifico
+	 * @author: Roberto Avila
+	 * @version: 01/09/2021/A
+	 * @see 
+	 */	
+//	@PostMapping
+//	public AnsSysCatCli altaSysCatCli(HttpServletRequest peticion,
+//									@RequestBody SysCatCli NuevoCliente){
+//		
+//									System.out.print("\n\n + RestSysCliController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+//									System.out.print("\n\n + RestSysCliController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+//
+//			  // Validación de token    	
+//			AnsSysCatCli respuesta = new AnsSysCatCli();
+//	    	String token = peticion.getHeader("Authorization");
+//	                                                                		System.out.print("\n\n + RestSysCliController token: " + token + "\n ");
+//			if (token != null) {
+//				String user = Jwts.parser()
+//						.setSigningKey("0neProj3ct")
+//						.parseClaimsJws(token.replace("Bearer",  ""))
+//						.getBody()
+//						.getSubject();
+//	                                                            			System.out.print("\n\n + RestSysCliController Usuario: " + user + "\n ");
+//			}	else	{
+//				respuesta.setCr("99");
+//				respuesta.setDescripcion("Petición sin token");		
+//				return respuesta;
+//				}
+//							
+//	    	try {
+//		    	//-------------existe el cliente?
+//	    		Optional<SysCatCli> todos = sysCli.findById(NuevoCliente.getIdCliProv()); 
+//				if (todos.isPresent())
+//				{
+//		    	//-------------
+//					SysCatCli clienteProc = sysCli.save(NuevoCliente);
+//					System.out.print(" + RestSysCliController insertar Cliente: " + clienteProc.getEmpresa() + "\n ");
+//					respuesta.setCr("00");
+//					respuesta.setDescripcion("Correcto");
+//					respuesta.setContenido(NuevoCliente);
+//					return respuesta;
+//					}
+//			        else {
+//						respuesta.setCr("83");
+//						respuesta.setDescripcion("Ya existe el cliente");
+//				        return respuesta;
+//			    	}
+//		    	} catch (Exception ex) {
+//		    		throw new ApiRequestException("Upsi");
+//		    	}
+//	}
+//
 
 
 	
