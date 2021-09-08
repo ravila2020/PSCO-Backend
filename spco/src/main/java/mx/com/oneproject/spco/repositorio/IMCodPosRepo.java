@@ -1,5 +1,6 @@
 package mx.com.oneproject.spco.repositorio;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,6 @@ public interface IMCodPosRepo extends JpaRepository<CodPost, String>{
 	@Query("select m from CodPost m where  m.dCodigo = :codigo")
 	Optional<CodPost> findByCodigo(@Param("codigo") String codigo);
 
+	@Query("select m from CodPost m where  m.dCodigo = :codigo")
+	List<CodPost> findByCodigoMult(@Param("codigo") String codigo);
 }
