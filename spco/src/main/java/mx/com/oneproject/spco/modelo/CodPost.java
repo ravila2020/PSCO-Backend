@@ -3,10 +3,12 @@ package mx.com.oneproject.spco.modelo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "cod_post")
+@IdClass(CodPostId.class)
+@Table(name = "cod_post2")
 public class CodPost {
 
 	@Id
@@ -34,6 +36,7 @@ public class CodPost {
 	public String cTipoAsenta;
 	@Column(name= "c_mnpio" ,nullable = false ,length = 3)
 	public String cMnpio;
+	@Id
 	@Column(name= "id_asenta_cpcons" ,nullable = false ,length = 4)
 	public String idAsentaCpcons;
 	@Column(name= "d_zona" ,nullable = false ,length = 10)

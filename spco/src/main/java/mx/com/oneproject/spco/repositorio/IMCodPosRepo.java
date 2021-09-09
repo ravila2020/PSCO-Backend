@@ -8,8 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import mx.com.oneproject.spco.modelo.CodPost;
+import mx.com.oneproject.spco.modelo.CodPostId;
 
-public interface IMCodPosRepo extends JpaRepository<CodPost, String>{
+public interface IMCodPosRepo extends JpaRepository<CodPost, CodPostId>{
 	
 	@Query("select distinct (m.dEstado) from CodPost m where  m.cEstado = :claveEdo")
 	String findByClaveEstado(@Param("claveEdo") String claveEdo);
@@ -23,6 +24,6 @@ public interface IMCodPosRepo extends JpaRepository<CodPost, String>{
 	@Query("select m from CodPost m where  m.dCodigo = :codigo")
 	Optional<CodPost> findByCodigo(@Param("codigo") String codigo);
 
-	@Query("select m from CodPost m where  m.dCodigo = :codigo")
+	@Query("select m from CodPost m where  m.dCodigo = :codigo and m.idAsentaCpcons between '0000' and '9999'")
 	List<CodPost> findByCodigoMult(@Param("codigo") String codigo);
 }
