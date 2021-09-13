@@ -312,9 +312,13 @@ public class RestSysCliController {
 			 SysCatCli actual = todos.get();
 			 if (opcion ==1)
 			 {
+				 														System.out.print("\n + RestSysCliController listarPag municip localidad estado: " + actual.getMunicipio() + "  --   " + actual.getLocalidad() + "  --   " + actual.getEstado() +"\n ");
+				 														System.out.print("\n + RestSysCliController listarPag estado: " + codigoPostal.findByClaveEstado(actual.getEstado()) +"\n ");
+				 														System.out.print("\n + RestSysCliController listarPag cd: " + codigoPostal.findByClaveCd(actual.getCP(),actual.getMunicipio(),actual.getEstado())  +"\n ");
+				 														System.out.print("\n + RestSysCliController listarPag municipio: " + codigoPostal.findByClaveMpio(actual.getCP(),actual.getMunicipio(),actual.getEstado(),actual.getLocalidad()) +"\n ");
 			 String estadoDesc = codigoPostal.findByClaveEstado(actual.getEstado());
-			 String estadoCd   = codigoPostal.findByClaveCd(actual.getLocalidad(),actual.getEstado());
-			 String estadoMpio = codigoPostal.findByClaveMpio(actual.getMunicipio(),actual.getLocalidad(),actual.getEstado());
+			 String estadoCd   = codigoPostal.findByClaveCd(actual.getCP(),actual.getMunicipio(),actual.getEstado());
+			 String estadoMpio = codigoPostal.findByClaveMpio(actual.getCP(),actual.getMunicipio(),actual.getEstado(),actual.getLocalidad());
 			 															System.out.print("\n + RestSysCliController listarPag estado: " + estadoDesc + " - " + estadoCd + " - "  + estadoMpio  +"\n ");
 			 actual.setEstado(estadoDesc);
 			 actual.setMunicipio(estadoMpio);
