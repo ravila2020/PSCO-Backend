@@ -22,7 +22,7 @@ public interface IMCodPosRepo extends JpaRepository<CodPost, CodPostId>{
 //**	@Query("select distinct (m.dMnpio)  from CodPost   m where   m.dCodigo =    :codigo and m.cMnpio = :claveCd and m.idAsentaCpcons = :claveMpio and  m.cEstado = :claveEdo")
 //**	String findByClaveMpio(@Param("codigo") String codigo, @Param("claveMpio") String claveMpio, @Param("claveCd") String claveCd, @Param("claveEdo") String claveEdo);
 
-	@Query("select distinct (m.dMnpio) from CodPost m where  m.dCodigo = :codigo and  m.cMnpio = :claveMunicipio and  m.cEstado = :claveEdo and m.idAsentaCpcons = :cLocalidad")
+	@Query("select distinct (m.dAsenta) from CodPost m where  m.dCodigo = :codigo and  m.cMnpio = :claveMunicipio and  m.cEstado = :claveEdo and m.idAsentaCpcons = :cLocalidad")
 	String findByClaveMpio(@Param("codigo") String codigo, @Param("claveMunicipio") String claveMunicipio, @Param("claveEdo") String claveEdo, @Param("cLocalidad") String cLocalidad);
 
 	@Query("select m from CodPost m where  m.dCodigo = :codigo")
