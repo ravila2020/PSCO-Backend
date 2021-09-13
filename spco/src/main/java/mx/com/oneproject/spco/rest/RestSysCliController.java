@@ -281,6 +281,7 @@ public class RestSysCliController {
 	 */	
     @GetMapping(path = {"/Cliente"})
     public AnsSysCatCli  obtenerClientePorClave(@RequestParam(required = false, value = "Id") String cliente,
+    											@RequestParam(required = false, value = "Opc") int opcion,
     		                    HttpServletRequest peticion) {
     // Validación de token
     	String user;
@@ -309,6 +310,8 @@ public class RestSysCliController {
 		 Optional<SysCatCli> todos = sysCli.findById(cliente);
 		 if (todos.isPresent()) {
 			 SysCatCli actual = todos.get();
+			 if (opcion ==1)
+			 {
 			 String estadoDesc = codigoPostal.findByClaveEstado(actual.getEstado());
 			 String estadoCd   = codigoPostal.findByClaveCd(actual.getLocalidad(),actual.getEstado());
 			 String estadoMpio = codigoPostal.findByClaveMpio(actual.getMunicipio(),actual.getLocalidad(),actual.getEstado());
@@ -316,6 +319,7 @@ public class RestSysCliController {
 			 actual.setEstado(estadoDesc);
 			 actual.setMunicipio(estadoMpio);
 			 actual.setLocalidad(estadoCd);
+			 } 
 			 respuesta.setContenido(actual);
 			 respuesta.setCr("00");
 			 respuesta.setDescripcion("Correcto");
