@@ -321,8 +321,8 @@ public class RestSysCliController {
 			 String estadoMpio = codigoPostal.findByClaveMpio(actual.getCP(),actual.getMunicipio(),actual.getEstado(),actual.getLocalidad());
 			 															System.out.print("\n + RestSysCliController listarPag estado: " + estadoDesc + " - " + estadoCd + " - "  + estadoMpio  +"\n ");
 			 actual.setEstado(estadoDesc);
-			 actual.setMunicipio(estadoMpio);
-			 actual.setLocalidad(estadoCd);
+			 actual.setMunicipio(estadoCd);
+			 actual.setLocalidad(estadoMpio);
 			 } 
 			 respuesta.setContenido(actual);
 			 respuesta.setCr("00");
