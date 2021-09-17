@@ -355,10 +355,12 @@ public class RestSysCliController {
 			 actual.setLocalidad(estadoMpio);
 			 actual.setPaís(pais);
 			 actual.setRecinto(nombreRecinto);
+			 actual.setNal(actual.getNal().trim());
 			 } else
 			 {
 				 actual.setPaís(pais);
 				 actual.setRecinto(actual.getRecinto().trim());
+				 actual.setNal(actual.getNal().trim());
 			 }
 			 respuesta.setContenido(actual);
 			 respuesta.setCr("00");
