@@ -357,7 +357,8 @@ public class RestSysCliController {
 			 actual.setRecinto(nombreRecinto);
 			 } else
 			 {
-				 actual.setPaís(pais);			 
+				 actual.setPaís(pais);
+				 actual.setRecinto(actual.getRecinto().trim());
 			 }
 			 respuesta.setContenido(actual);
 			 respuesta.setCr("00");
