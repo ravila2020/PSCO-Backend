@@ -13,4 +13,8 @@ public interface IMSysRecinRepo  extends JpaRepository<SysRecintos, BigDecimal> 
 
 	@Query("select m from SysRecintos m where m.idEmpresa =:empresa and m.idRecinto =:recinto and m.estatus = 'A'")
 	Optional<SysRecintos> findByClave(@Param("empresa") BigDecimal empresa, @Param("recinto") BigDecimal recinto);
+
+	@Query("select m from SysRecintos m where m.idEmpresa =:empresa and m.idRecinto =:recinto and m.estatus = 'A'")
+	SysRecintos findByRecinto(@Param("empresa") BigDecimal empresa, @Param("recinto") BigDecimal recinto);
+
 }

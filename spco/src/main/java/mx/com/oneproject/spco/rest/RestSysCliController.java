@@ -18,10 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
+import mx.com.oneproject.spco.modelo.DetCatAp;
 import mx.com.oneproject.spco.modelo.SysCatCli;
+import mx.com.oneproject.spco.modelo.SysRecintos;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
 import mx.com.oneproject.spco.repositorio.IMCodPosRepo;
+import mx.com.oneproject.spco.repositorio.IMDetCatApRepo;
 import mx.com.oneproject.spco.repositorio.IMSysCatCliRepo;
+import mx.com.oneproject.spco.repositorio.IMSysRecinRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.SysCatCliPag;
 import mx.com.oneproject.spco.result.AnsSysCatCli;
@@ -41,6 +45,13 @@ public class RestSysCliController {
 	
 	@Autowired
 	private IMCodPosRepo codigoPostal;
+	
+	@Autowired
+	private IMDetCatApRepo RepoDetCatAp;
+
+	@Autowired
+	private IMSysRecinRepo repoRecinto;
+	
 	
 
 	// Consulta de la lista de sys_usuarios con validacion de token.
@@ -284,7 +295,9 @@ public class RestSysCliController {
     											@RequestParam(required = false, value = "Opc") int opcion,
     		                    HttpServletRequest peticion) {
     // Validación de token
-    	String user;
+        DetCatAp apendice07 = new DetCatAp();
+    	SysRecintos descRecinto = new SysRecintos();
+    	String user, nombreRecinto;
     	AnsSysCatCli respuesta = new AnsSysCatCli();
     	String token = peticion.getHeader("Authorization");
                                                                 		System.out.print("\n\n + RestSysCliController token: " + token + "\n ");
@@ -306,10 +319,27 @@ public class RestSysCliController {
 		BigDecimal empresa = usuarioProc.getIdEmpresa();
 		String recintoS = recinto.toString();
 		String empresaS = empresa.toString();
+		String pais;
 	// Preparación de la paginación.
 		 Optional<SysCatCli> todos = sysCli.findById(cliente);
 		 if (todos.isPresent()) {
 			 SysCatCli actual = todos.get();
+    		 apendice07 = RepoDetCatAp.findByCampos("AP04", actual.getPaís(), "X");
+    		 descRecinto = repoRecinto.findByRecinto(BigDecimal.valueOf(Double.valueOf(actual.getEmpresa())),BigDecimal.valueOf(Double.valueOf(actual.getRecinto())));
+    		 if (apendice07 == null) {
+  			 pais = "Sin descripción"; 
+  			 }
+	  		 else{
+	  			 pais = apendice07.getDesCorta();
+	  		 }
+	    	 if (descRecinto == null){
+	    		 nombreRecinto = "Sin descripción"; 
+	  			 }
+	  		 else{
+	  			nombreRecinto = descRecinto.getDescRecinto();
+	  		 }
+	    		 															System.out.print("\n + RestSysCliController listarPag Pais: " + pais +"\n ");
+
 			 if (opcion ==1)
 			 {
 				 														System.out.print("\n + RestSysCliController listarPag municip localidad estado: " + actual.getMunicipio() + "  --   " + actual.getLocalidad() + "  --   " + actual.getEstado() +"\n ");
@@ -323,7 +353,12 @@ public class RestSysCliController {
 			 actual.setEstado(estadoDesc);
 			 actual.setMunicipio(estadoCd);
 			 actual.setLocalidad(estadoMpio);
-			 } 
+			 actual.setPaís(pais);
+			 actual.setRecinto(nombreRecinto);
+			 } else
+			 {
+				 actual.setPaís(pais);			 
+			 }
 			 respuesta.setContenido(actual);
 			 respuesta.setCr("00");
 			 respuesta.setDescripcion("Correcto");
