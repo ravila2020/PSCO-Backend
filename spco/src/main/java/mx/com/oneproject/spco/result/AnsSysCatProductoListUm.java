@@ -13,7 +13,8 @@ public class AnsSysCatProductoListUm {
 	int total;
 	int totalPages;
 	public List<SysCatProducto> objetoItem;
-	public List<String> uMDescripcion;
+	public List<String> uMCDescripcion;
+	public List<String> uMTDescripcion;
 	public String getCr() {
 		return cr;
 	}
@@ -56,11 +57,17 @@ public class AnsSysCatProductoListUm {
 	public void setObjetoItem(List<SysCatProducto> objetoItem) {
 		this.objetoItem = objetoItem;
 	}
-	public List<String> getuMDescripcion() {
-		return uMDescripcion;
+	public List<String> getuMCDescripcion() {
+		return uMCDescripcion;
 	}
-	public void setuMDescripcion(List<String> uMDescripcion) {
-		this.uMDescripcion = uMDescripcion;
+	public void setuMCDescripcion(List<String> uMCDescripcion) {
+		this.uMCDescripcion = uMCDescripcion;
 	}
-	
+	public List<String> getuMTDescripcion() {
+		return uMTDescripcion;
+	}
+	public void setuMTDescripcion(List<String> uMTDescripcion) {
+		this.uMTDescripcion = uMTDescripcion;
+	}
+
 }

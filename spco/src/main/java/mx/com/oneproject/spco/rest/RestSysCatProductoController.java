@@ -356,11 +356,15 @@ public class RestSysCatProductoController {
          Acumulado.objetoItem = sysProd.findByTipo(tipo,empresaS,recintoS);
          Acumulado.objetoItem.clear();
          
-         Acumulado.uMDescripcion =  new ArrayList<String>();
-         Acumulado.uMDescripcion.clear();
+         Acumulado.uMCDescripcion =  new ArrayList<String>();
+         Acumulado.uMCDescripcion.clear();
+         Acumulado.uMTDescripcion =  new ArrayList<String>();
+         Acumulado.uMTDescripcion.clear();
          
          String uMDescrip = new String();
          DetCatAp apendice07 = new DetCatAp();
+         String uMDescripT = new String();
+         DetCatAp apendice07T = new DetCatAp();
   //       Acumulado.uMDescripcion = new SysCatProductoUm();
   //       Acumulado.uMDescripcion = new 
          SysCatProductoUm elementoItem = new SysCatProductoUm();
@@ -369,7 +373,7 @@ public class RestSysCatProductoController {
         	 if(i>=sysCatProductoInicial && i<=sysCatProductoFinal)
         	 {
         		 sysCatProductoCero = todosSysCatProducto.get(i);
-  //      		 														System.out.print("\n " + "          + RestSysCatProductoController UM: " +  sysCatProductoCero.getuM() + "\n ");
+  									System.out.print("\n " + "          + RestSysCatProductoController UM: " +  sysCatProductoCero.getuMC() + " - " +  sysCatProductoCero.getuMT() + "\n ");
         		 apendice07 = RepoDetCatAp.findByCampos("AP07", sysCatProductoCero.getuMC(), "X");
         		 if (apendice07 == null)
         		   {
@@ -379,11 +383,21 @@ public class RestSysCatProductoController {
         		 {
         			 uMDescrip = apendice07.getDesCorta();
         		 }
+        		 apendice07T = RepoDetCatAp.findByCampos("AP07", sysCatProductoCero.getuMT(), "X");
+        		 if (apendice07T == null)
+        		   {
+        			 uMDescripT = "Sin descripción"; 
+        			 }
+        		 else
+        		 {
+        			 uMDescripT = apendice07T.getDesCorta();
+        		 }
         		 paginaSysCatProductos.add(sysCatProductoCero);
         		 elementoItem.setObjetoItem(sysCatProductoCero);
         		 elementoItem.setuMDescripcion(uMDescrip);
         		 Acumulado.objetoItem.add(sysCatProductoCero);
-        		 Acumulado.uMDescripcion.add(uMDescrip);
+        		 Acumulado.uMCDescripcion.add(uMDescrip);
+        		 Acumulado.uMTDescripcion.add(uMDescripT);
       //  		 Acumulado.ListaProductosUm.add(i,elementoItem);
       //  		 Acumulado.ListaProductosUm.add(elementoItem);
         		 System.out.print("  -- En lista  --" + sysCatProductoCero.getClveProduc() );
@@ -405,7 +419,8 @@ public class RestSysCatProductoController {
 	     respuesta.setTotal(resultado.getTotal());
 	     respuesta.setTotalPages(pagEntero);
 	     respuesta.setObjetoItem(Acumulado.getObjetoItem());
-	     respuesta.setuMDescripcion(Acumulado.getuMDescripcion());
+	     respuesta.setuMCDescripcion(Acumulado.getuMCDescripcion());
+	     respuesta.setuMTDescripcion(Acumulado.getuMTDescripcion());
 	 	 
 		 respuesta.setCr("00");
 		 respuesta.setDescripcion("Correcto");
@@ -577,8 +592,8 @@ public class RestSysCatProductoController {
          Acumulado.objetoItem = sysProd.findByClave(clave,empresaS,recintoS);
          Acumulado.objetoItem.clear();
          
-         Acumulado.uMDescripcion =  new ArrayList<String>();
-         Acumulado.uMDescripcion.clear();
+         Acumulado.uMCDescripcion =  new ArrayList<String>();
+         Acumulado.uMCDescripcion.clear();
          
          String uMDescrip = new String();
          DetCatAp apendice07 = new DetCatAp();
@@ -605,7 +620,7 @@ public class RestSysCatProductoController {
         		 elementoItem.setObjetoItem(sysCatProductoCero);
         		 elementoItem.setuMDescripcion(uMDescrip);
         		 Acumulado.objetoItem.add(sysCatProductoCero);
-        		 Acumulado.uMDescripcion.add(uMDescrip);
+        		 Acumulado.uMCDescripcion.add(uMDescrip);
         		 Producto.setContenido(sysCatProductoCero);
         		 Producto.setuMDescripcion(uMDescrip);
         		 System.out.print("  -- En lista  --" + sysCatProductoCero.getClveProduc() );
@@ -625,7 +640,8 @@ public class RestSysCatProductoController {
 	     respuesta.setTotal(resultado.getTotal());
 	     respuesta.setTotalPages(pagEntero);
 	     respuesta.setObjetoItem(Acumulado.getObjetoItem());
-	     respuesta.setuMDescripcion(Acumulado.getuMDescripcion());
+	     respuesta.setuMCDescripcion(Acumulado.getuMCDescripcion());
+	     respuesta.setuMTDescripcion(Acumulado.getuMTDescripcion());
 	 	 
 		 respuesta.setCr("00");
 		 respuesta.setDescripcion("Correcto");
