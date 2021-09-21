@@ -41,7 +41,7 @@ public class SysCatProducto {
 	private String uMT;
 
 	@Column(name = "Tip_Mat", nullable = false, length = 10)	
-	private String Tip_Mat;
+	private String tipMat;
 	
 	@Column(name = "Empresa", nullable = false, length = 4)	
 	private String empresa;
@@ -148,12 +148,12 @@ public class SysCatProducto {
 		this.uMT = uMT;
 	}
 
-	public String getTip_Mat() {
-		return Tip_Mat;
+	public String getTipMat() {
+		return tipMat;
 	}
 
-	public void setTip_Mat(String tip_Mat) {
-		Tip_Mat = tip_Mat;
+	public void setTipMat(String tipMat) {
+		this.tipMat = tipMat;
 	}
 
 	public String getEmpresa() {
@@ -245,7 +245,5 @@ public class SysCatProducto {
 	}
 
 
-
-	
 	
 }
