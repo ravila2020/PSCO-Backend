@@ -188,7 +188,15 @@ public class RestSysCatProductoController {
 		
 									System.out.print("\n\n + RestSysCatProductoController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
 									System.out.print("\n\n + RestSysCatProductoController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
-
+			//-----------
+			String recinto = NuevoProducto.getRecinto();
+			String empresa = NuevoProducto.getEmpresa();
+			empresa = String.format("%04d", Integer.valueOf(empresa));
+			recinto = String.format("%04d", Integer.valueOf(recinto));
+			NuevoProducto.setRecinto(recinto);
+			NuevoProducto.setEmpresa(empresa);
+			
+			//-----------
 			  // Validación de token    	
 			AnsSysCatProducto respuesta = new AnsSysCatProducto();
 	    	String token = peticion.getHeader("Authorization");
@@ -211,6 +219,8 @@ public class RestSysCatProductoController {
 				if (sysProd.findByProducto(NuevoProducto.getClveProduc(), NuevoProducto.getEmpresa(), NuevoProducto.getRecinto()) == null)
 				{
 		    	//-------------
+
+					
 					SysCatProducto productoProc = sysProd.save(NuevoProducto);
 					System.out.print(" + RestSysCatProductoController insertar Producto: " + productoProc.getClveProduc() + "\n ");
 					respuesta.setCr("00");
