@@ -10,7 +10,8 @@ public class AnsSysCatProductoUm {
 	private String cr;
 	private String descripcion;
 	private SysCatProducto contenido;
-	private String uMDescripcion;
+	private String uMCDescripcion;
+	private String uMTDescripcion;
 	
 	public String getCr() {
 		return cr;
@@ -30,11 +31,17 @@ public class AnsSysCatProductoUm {
 	public void setContenido(SysCatProducto contenido) {
 		this.contenido = contenido;
 	}
-	public String getuMDescripcion() {
-		return uMDescripcion;
+	public String getuMCDescripcion() {
+		return uMCDescripcion;
 	}
-	public void setuMDescripcion(String uMDescripcion) {
-		this.uMDescripcion = uMDescripcion;
+	public void setuMCDescripcion(String uMCDescripcion) {
+		this.uMCDescripcion = uMCDescripcion;
 	}
-
+	public String getuMTDescripcion() {
+		return uMTDescripcion;
+	}
+	public void setuMTDescripcion(String uMTDescripcion) {
+		this.uMTDescripcion = uMTDescripcion;
+	}
+	
 }
