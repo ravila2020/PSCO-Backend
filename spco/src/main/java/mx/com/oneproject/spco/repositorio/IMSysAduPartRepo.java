@@ -18,9 +18,12 @@ public interface IMSysAduPartRepo extends JpaRepository<SysAduPart, SysAduPartId
 	List<SysAduPart> BuscarByTodo();
 	
 	@Query("select m from SysAduPart m where m.IdCliProv = :cliente and m.numPart = :parte and m.numPedimento = :pedimento ")
-	List<SysAduPart> findByLlave(@Param("cliente") String pato, @Param("parte") String parte, @Param("pedimento") String pedimento);
+	List<SysAduPart> findByLlave(@Param("cliente") String cliente, @Param("parte") String parte, @Param("pedimento") String pedimento);
 
 	@Query("select m from SysAduPart m where m.IdCliProv = :cliente and m.numPart = :parte and m.numPedimento = :pedimento ")
-	SysAduPart findByLlaveUnica(@Param("cliente") String pato, @Param("parte") String parte, @Param("pedimento") String pedimento);
+	SysAduPart findByLlaveUnica(@Param("cliente") String cliente, @Param("parte") String parte, @Param("pedimento") String pedimento);
+
+	@Query("select distinct(m.IdCliProv) from SysAduPart m")
+	List<String> findByClientesUnicos();
 
 }

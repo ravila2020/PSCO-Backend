@@ -54,7 +54,7 @@ public class RestSysCliController {
 	
 	
 
-	// Consulta de la lista de sys_usuarios con validacion de token.
+	// Consulta de la lista de sys_cat_cli.
 	@GetMapping
 	public List<SysCatCli> listar(HttpServletRequest peticion){
 		
@@ -168,7 +168,12 @@ public class RestSysCliController {
 		    	}
 	}
 
-	// Consulta de la lista de sys_usuarios con validacion de token.
+	/**
+	 * Esta clase define el método de consulta de tipos de clientes
+	 * @author: Roberto Avila
+	 * @version: 01/09/2021/A
+	 * @see 
+	 */	
 	@GetMapping(path = {"/TiposCli"})
 	public AnsSysCatCliTipo Tipos(HttpServletRequest peticion){
 		
@@ -200,6 +205,43 @@ public class RestSysCliController {
 	}
 
 
+	/**
+	 * Esta clase define el método de consulta de los diferentes clientes
+	 * @author: Roberto Avila
+	 * @version: 01/09/2021/A
+	 * @see 
+	 */	
+	@GetMapping(path = {"/DifCli"})
+	public AnsSysCatCliTipo Diferentes(HttpServletRequest peticion){
+		
+		System.out.print("\n\n + RestSysCliController listar: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+		System.out.print("\n\n + RestSysCliController listar: " + peticion.getHeader("Authorization")+ "\n ");	
+		AnsSysCatCliTipo respuesta = new AnsSysCatCliTipo();
+
+		  // Validación de token    	
+		String token = peticion.getHeader("Authorization");
+                                                              		System.out.print("\n\n + RestSysCliController token: " + token + "\n ");
+		if (token != null) {
+			String user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                          			System.out.print("\n\n + RestSysCliController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+
+		
+		respuesta.setCr("00");
+		respuesta.setDescripcion("Consulta correcta");
+		respuesta.setContenido(sysCli.findByClientesUnicos());
+		return (respuesta);
+	}
+
+	
 	/**
 	 * Esta clase define el método de consulta de clientes por tipo con paginación
 	 * @author: Roberto Avila

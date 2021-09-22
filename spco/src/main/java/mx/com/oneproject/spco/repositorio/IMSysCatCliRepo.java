@@ -26,5 +26,6 @@ public interface IMSysCatCliRepo extends JpaRepository<SysCatCli, String> {
 	@Query("select m        from SysCatCli m where m.Tipo = :tipo")
 	List<SysCatCli> findByTipos(@Param("tipo") String tipo);
 
-
+	@Query("select distinct(m.IdCliProv) from SysCatCli m")
+	List<String> findByClientesUnicos();
 }
