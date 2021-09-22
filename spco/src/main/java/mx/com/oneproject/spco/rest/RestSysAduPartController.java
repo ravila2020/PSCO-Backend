@@ -46,7 +46,7 @@ public class RestSysAduPartController {
 		return aduPart.findAll();
 	}
 
-
+	
 	/**
 	 * Esta clase define el método de consulta paginada de partes
 	 * @author: Roberto Avila
@@ -131,6 +131,57 @@ public class RestSysAduPartController {
          return respuesta;
     }
 
+    
+	/**
+	 * Esta clase define el método de consulta de SysAduPart
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+	@GetMapping(path = {"/Consulta"})
+	public AnsSysAduPart consultaSysAduPart(@RequestParam(required = false, value = "cliente") String cliente,
+										@RequestParam(required = false, value = "parte") String parte,
+										@RequestParam(required = false, value = "pedimento") String pedimento,
+										HttpServletRequest peticion){
+		
+									System.out.print("\n\n + RestSysAduPartController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysAduPartController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+     	  // Validación de token    	
+			AnsSysAduPart respuesta = new AnsSysAduPart();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysAduPartController token: " + token + "\n ");
+			if (token != null) {
+				String user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysAduPartController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+							
+	    	try {
+		    	//-------------existe el producto?
+				if (aduPart.findByLlave(cliente, parte, pedimento).isEmpty()){
+					respuesta.setCr("83");
+					respuesta.setDescripcion("No existe cliente / parte / pedimento");
+			        return respuesta;
+				  } else {
+				    	//-------------
+						SysAduPart productoProc = aduPart.findByLlaveUnica(cliente, parte, pedimento);
+						System.out.print(" + RestSysAduPartController consultar  Producto: " + productoProc.getIdCliProv() + "\n ");
+						respuesta.setCr("00");
+						respuesta.setDescripcion("Correcto");
+						respuesta.setContenido(productoProc);
+						return respuesta;
+			   	  }
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
     
 	/**
 	 * Esta clase define el método de alta de SysAduPart
