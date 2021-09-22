@@ -29,6 +29,7 @@ import mx.com.oneproject.spco.repositorio.IMSysRecinRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.SysCatCliPag;
 import mx.com.oneproject.spco.result.AnsSysCatCli;
+import mx.com.oneproject.spco.result.AnsSysCatCliDif;
 import mx.com.oneproject.spco.result.AnsSysCatCliList;
 import mx.com.oneproject.spco.result.AnsSysCatCliTipo;
 
@@ -212,11 +213,11 @@ public class RestSysCliController {
 	 * @see 
 	 */	
 	@GetMapping(path = {"/DifCli"})
-	public AnsSysCatCliTipo Diferentes(HttpServletRequest peticion){
+	public AnsSysCatCliDif Diferentes(HttpServletRequest peticion){
 		
 		System.out.print("\n\n + RestSysCliController listar: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
 		System.out.print("\n\n + RestSysCliController listar: " + peticion.getHeader("Authorization")+ "\n ");	
-		AnsSysCatCliTipo respuesta = new AnsSysCatCliTipo();
+		AnsSysCatCliDif respuesta = new AnsSysCatCliDif();
 
 		  // Validación de token    	
 		String token = peticion.getHeader("Authorization");
@@ -237,7 +238,7 @@ public class RestSysCliController {
 		
 		respuesta.setCr("00");
 		respuesta.setDescripcion("Consulta correcta");
-		respuesta.setContenido(sysCli.findByClientesUnicos());
+		respuesta.setContenido(sysCli.findByClientesNombresUnicos());
 		return (respuesta);
 	}
 

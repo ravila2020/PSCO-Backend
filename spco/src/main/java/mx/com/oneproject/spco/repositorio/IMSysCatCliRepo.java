@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import mx.com.oneproject.spco.modelo.CliDupla;
 import mx.com.oneproject.spco.modelo.SysCatCli;	
 
 public interface IMSysCatCliRepo extends JpaRepository<SysCatCli, String> {
@@ -28,4 +29,8 @@ public interface IMSysCatCliRepo extends JpaRepository<SysCatCli, String> {
 
 	@Query("select distinct(m.IdCliProv) from SysCatCli m")
 	List<String> findByClientesUnicos();
+	
+	@Query("select n from SysCatCli n where n.IdCliProv in (select distinct(m.IdCliProv) from SysCatCli m)")
+	List<SysCatCli> findByClientesNombresUnicos();
+
 }

@@ -131,6 +131,93 @@ public class RestSysAduPartController {
          return respuesta;
     }
 
+	/**
+	 * Esta clase define el método de consulta paginada de partes por cliente recinto
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+    @GetMapping(path = {"/AduPartPagCte"})
+    public AnsSysAduPartList listarPagCteRecinto(@RequestParam(required = false, value = "page") int page,
+            @RequestParam(required = false, value = "perpage") int perPage, 
+            @RequestParam(required = false, value = "cliente") String cliente, 
+            @RequestParam(required = false, value = "recinto") String recinto, 
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysAduPartList respuesta = new AnsSysAduPartList();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduPartController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduPartController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recintoU = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recintoU.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recintoU.intValue());
+	// Preparación de la paginación.
+		boolean enabled = true;
+		SysAduPart SysAduPartCero = new SysAduPart();
+		Long todos = (long) 0;
+		double paginas = (float) 0.0;
+		Integer pagEntero = 0;
+		List<SysAduPart> todosSysAduPart;
+		List<SysAduPart> paginaSysAduParts; 
+		Integer SysAduPartInicial, SysAduPartFinal;
+		
+		SysAduPartPag resultado = new SysAduPartPag();
+                                                                      	System.out.print(" + RestSysAduPartController listarPag page: " + page + " perpage: " + perPage +"\n ");
+    // obtener el total de sys_usuarios
+         todos = aduPart.countByTodoCteRecinto(cliente,recinto);
+         paginas = (double) todos / perPage;
+         pagEntero = (int) paginas;
+         if ((paginas-pagEntero)>0)
+         {
+        	 pagEntero++;
+         }
+    // Obtener la lista de sys_usuarios solicitada 
+         SysAduPartInicial = (perPage  * (page - 1) );
+         SysAduPartFinal   = (SysAduPartInicial + perPage) - 1;
+         todosSysAduPart  = aduPart.BuscarByCteRecinto(cliente,recinto);
+         paginaSysAduParts = aduPart.BuscarByCteRecinto(cliente,recinto);
+         paginaSysAduParts.clear();
+         for (int i=0; i<todos;i++) {
+//        	 															System.out.print("\n " + "          + RestSysAduPartController Apendice: " + i + " - " + todosSysAduPart.get(i).getClveProduc() + " - " + todosSysAduPart.get(i).getTipProd() + " - " + todosSysAduPart.get(i).getDescCorIng());
+        	 if(i>=SysAduPartInicial && i<=SysAduPartFinal)
+        	 {
+        		 SysAduPartCero = todosSysAduPart.get(i);
+        		 paginaSysAduParts.add(SysAduPartCero);
+//        		 System.out.print("  -- En lista  --" + SysAduPartCero.gegetClveProduc() );
+        	 }
+         }
+         
+         																System.out.print("\n + RestSysAduPartController listarPag todos: " + todos + " paginas: " + paginas + "  " + (paginas-pagEntero ) +"\n ");
+         //
+         resultado.setPage(page);
+         resultado.setPerPage(perPage);
+         resultado.setTotal((int) aduPart.countByTodoCteRecinto(cliente,recinto));
+         resultado.setTotalPages(pagEntero);
+         resultado.setSysAduPartes(paginaSysAduParts);
+	 	 respuesta.setContenido(resultado);
+		 respuesta.setCr("00");
+		 respuesta.setDescripcion("Correcto");
+         return respuesta;
+    }
+
+ 
     
 	/**
 	 * Esta clase define el método de consulta de SysAduPart
