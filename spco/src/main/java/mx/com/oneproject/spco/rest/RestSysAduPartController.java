@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,15 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
+import mx.com.oneproject.spco.modelo.DetCatAp;
 import mx.com.oneproject.spco.modelo.SysAduPart;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
+import mx.com.oneproject.spco.repositorio.IMDetCatApRepo;
 import mx.com.oneproject.spco.repositorio.IMSysAduPartRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.AnsSysAduPart;
 import mx.com.oneproject.spco.respuesta.AnsSysAduPartList;
+import mx.com.oneproject.spco.respuesta.AnsSysAduPartUm;
 import mx.com.oneproject.spco.respuesta.SysAduPartPag;
 
-//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
 @RequestMapping("/AduPart")
 public class RestSysAduPartController {
@@ -34,6 +38,9 @@ public class RestSysAduPartController {
 	@Autowired
 	private IMSysAduPartRepo aduPart;
 
+	@Autowired
+	private IMDetCatApRepo RepoDetCatAp;
+	
 	/**
 	 * Esta clase define el método de consulta plana de partes
 	 * @author: Roberto Avila
@@ -259,6 +266,79 @@ public class RestSysAduPartController {
 				  } else {
 				    	//-------------
 						SysAduPart productoProc = aduPart.findByLlaveUnica(cliente, parte, pedimento);
+						System.out.print(" + RestSysAduPartController consultar  Producto: " + productoProc.getIdCliProv() + "\n ");
+						respuesta.setCr("00");
+						respuesta.setDescripcion("Correcto");
+						respuesta.setContenido(productoProc);
+						return respuesta;
+			   	  }
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+    
+	/**
+	 * Esta clase define el método de consulta de SysAduPart
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+	@GetMapping(path = {"/ConsultaUm"})
+	public AnsSysAduPartUm consultaSysAduPartUm(@RequestParam(required = false, value = "cliente") String cliente,
+										@RequestParam(required = false, value = "parte") String parte,
+										@RequestParam(required = false, value = "pedimento") String pedimento,
+										HttpServletRequest peticion){
+		
+									System.out.print("\n\n + RestSysAduPartController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysAduPartController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+     	  // Validación de token    	
+			AnsSysAduPartUm respuesta = new AnsSysAduPartUm();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysAduPartController token: " + token + "\n ");
+			if (token != null) {
+				String user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysAduPartController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+							
+	    	try {
+		    	//-------------existe el producto?
+				if (aduPart.findByLlave(cliente, parte, pedimento).isEmpty()){
+					respuesta.setCr("83");
+					respuesta.setDescripcion("No existe cliente / parte / pedimento");
+			        return respuesta;
+				  } else {
+				    	//-------------
+						SysAduPart productoProc = aduPart.findByLlaveUnica(cliente, parte, pedimento);
+						DetCatAp apendice07 = new DetCatAp();
+						DetCatAp apendice07T = new DetCatAp();
+		        		 apendice07 = RepoDetCatAp.findByCampos("AP07", productoProc.getuMC(), "X");
+		        		 if (apendice07 == null)
+		        		   {
+		        			 respuesta.setuMCdescripcion("Sin descripción"); 
+		        			 }
+		        		 else
+		        		 {
+		        			 respuesta.setuMCdescripcion(apendice07.getDesCorta());
+		        		 }
+		        		 apendice07T = RepoDetCatAp.findByCampos("AP07", productoProc.getuMT(), "X");
+		        		 if (apendice07T == null)
+		        		   {
+		        			 respuesta.setuMCdescripcion("Sin descripción"); 
+		        			 }
+		        		 else
+		        		 {
+		        			 respuesta.setuMTdescripcion(apendice07T.getDesCorta());
+		        		 }
+
+						
 						System.out.print(" + RestSysAduPartController consultar  Producto: " + productoProc.getIdCliProv() + "\n ");
 						respuesta.setCr("00");
 						respuesta.setDescripcion("Correcto");

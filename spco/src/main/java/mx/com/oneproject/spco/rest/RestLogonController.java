@@ -24,7 +24,7 @@ import mx.com.oneproject.spco.repositorio.IMVigTokenRepo;
 import mx.com.oneproject.spco.respuesta.AnsLogonIn;
 import mx.com.oneproject.spco.respuesta.AnsLogonOut;
 
-//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/Logon")
 public class RestLogonController {
