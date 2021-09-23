@@ -37,5 +37,17 @@ public interface IMSysCatProductoRepo extends JpaRepository<SysCatProducto, Stri
 	@Query("delete          from SysCatProducto m where m.clveProduc = :clave and m.empresa = :empresa and m.recinto = :recinto")
 	int  deleteByProducto(@Param("clave") String clave, @Param("empresa") String empresa, @Param("recinto") String recinto);
 
+	@Query("select n from SysCatProducto n where n.empresa = :empresa and n.recinto = :recinto and n.clveProduc in ( select distinct(m.clveProduc) from SysCatProducto m where m.empresa = :empresa and m.recinto = :recinto)")
+	List<SysCatProducto> findByClaveUnic(@Param("empresa") String empresa, @Param("recinto") String recinto);
+
+	@Query("select count(*) from SysCatProducto n where n.empresa = :empresa and n.recinto = :recinto and n.clveProduc in ( select distinct(m.clveProduc) from SysCatProducto m where m.empresa = :empresa and m.recinto = :recinto)")
+	long countByClaveUnic(@Param("empresa") String empresa, @Param("recinto") String recinto);
+
+	@Query("select n from SysCatProducto n where n.clveProduc in ( select distinct(m.clveProduc) from SysCatProducto m)")
+	List<SysCatProducto> findByClaveUnicCero();
+
+	@Query("select count(*) from SysCatProducto n where n.clveProduc in ( select distinct(m.clveProduc) from SysCatProducto m)")
+	long countByClaveUnicCero();
+
 
 }

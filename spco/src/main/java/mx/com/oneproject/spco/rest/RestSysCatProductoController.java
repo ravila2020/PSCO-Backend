@@ -181,6 +181,96 @@ public class RestSysCatProductoController {
          return respuesta;
     }
 
+	// Consulta de Productos  con paginacion y validacion de token.
+    @GetMapping(path = {"/ProdPagTot"})
+    public AnsSysCatProductoList listarPagTot(@RequestParam(required = false, value = "page") int page,
+    							@RequestParam(required = false, value = "perpage") int perPage, 
+    							@RequestParam(required = false, value = "tipo") int tipo, 
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysCatProductoList respuesta = new AnsSysCatProductoList();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysCatProductoController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysCatProductoController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+	// Preparación de la paginación.
+		boolean enabled = true;
+		SysCatProducto sysCatProductoCero = new SysCatProducto();
+		Long todos = (long) 0;
+		double paginas = (float) 0.0;
+		Integer pagEntero = 0;
+		List<SysCatProducto> todosSysCatProducto;
+		List<SysCatProducto> paginaSysCatProductos; 
+		Integer sysCatProductoInicial, sysCatProductoFinal;
+		
+		SysCatProductoPag resultado = new SysCatProductoPag();
+                                                                      	System.out.print(" + RestSysCatProductoController listarPag page: " + page + " perpage: " + perPage +"\n ");
+    // obtener el total de sys_usuarios
+         if (tipo != 0) {
+        	 todos = sysProd.countByClaveUnic(empresaS,recintoS);
+         } else
+         {
+        	 todos = sysProd.countByClaveUnicCero();
+         }
+         paginas = (double) todos / perPage;
+         pagEntero = (int) paginas;
+         if ((paginas-pagEntero)>0)
+         {
+        	 pagEntero++;
+         }
+    // Obtener la lista de sys_usuarios solicitada 
+         sysCatProductoInicial = (perPage  * (page - 1) );
+         sysCatProductoFinal   = (sysCatProductoInicial + perPage) - 1;
+         if (tipo != 0) {
+             todosSysCatProducto  = sysProd.findByClaveUnic(empresaS,recintoS);
+         } else
+         {
+             todosSysCatProducto  = sysProd.findByClaveUnicCero();
+         }
+         paginaSysCatProductos = sysProd.findByClaveUnic("9999","9999");
+         paginaSysCatProductos.clear();
+         for (int i=0; i<todos;i++) {
+//        	 															System.out.print("\n " + "          + RestSysCatProductoController Apendice: " + i + " - " + todosSysCatProducto.get(i).getClveProduc() + " - " + todosSysCatProducto.get(i).getTipProd() + " - " + todosSysCatProducto.get(i).getDescCorIng());
+        	 if(i>=sysCatProductoInicial && i<=sysCatProductoFinal)
+        	 {
+        		 sysCatProductoCero = todosSysCatProducto.get(i);
+        		 paginaSysCatProductos.add(sysCatProductoCero);
+//        		 System.out.print("  -- En lista  --" + sysCatProductoCero.gegetClveProduc() );
+        	 }
+         }
+         
+         																System.out.print("\n + RestSysCatProductoController listarPag todos: " + todos + " paginas: " + paginas + "  " + (paginas-pagEntero ) +"\n ");
+         //
+         resultado.setPage(page);
+         resultado.setPerPage(perPage);
+         resultado.setTotal(todos.intValue());
+         resultado.setTotalPages(pagEntero);
+         resultado.setSysCatProductos(paginaSysCatProductos);
+	 	 respuesta.setContenido(resultado);
+		 respuesta.setCr("00");
+		 respuesta.setDescripcion("Correcto");
+         return respuesta;
+    }
+    
 	// Alta de un Producto con validacion de token.
 	@PostMapping
 	public AnsSysCatProducto altaSysCatProducto(HttpServletRequest peticion,
