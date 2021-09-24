@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "SYS_CAT_PROD3")
+@Table(name = "SYS_CAT_PROD4")
 public class SysCatProducto {
 
 	@Id
@@ -69,6 +69,9 @@ public class SysCatProducto {
 
 	@Column(name = "Costo_unit_MXP", nullable = false)	
 	private float costoUnitMXP;
+
+	@Column(name = "Moneda_Mandataria", nullable = false, length = 3)	
+	private String monedaMandataria;
 
 	@Column(name = "Fracc_Aranc", nullable = false, length = 8)	
 	private String fraccAranc;
@@ -228,6 +231,14 @@ public class SysCatProducto {
 		this.costoUnitMXP = costoUnitMXP;
 	}
 
+	public String getMonedaMandataria() {
+		return monedaMandataria;
+	}
+
+	public void setMonedaMandataria(String monedaMandataria) {
+		this.monedaMandataria = monedaMandataria;
+	}
+
 	public String getFraccAranc() {
 		return fraccAranc;
 	}
@@ -243,7 +254,6 @@ public class SysCatProducto {
 	public void setNico(String nico) {
 		this.nico = nico;
 	}
-
 
 	
 }
