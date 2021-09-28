@@ -21,6 +21,7 @@ import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.modelo.DetCatAp;
 import mx.com.oneproject.spco.modelo.SysCatProducto;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
+import mx.com.oneproject.spco.repositorio.IMCatConversionRepo;
 import mx.com.oneproject.spco.repositorio.IMDetCatApRepo;
 import mx.com.oneproject.spco.repositorio.IMSysCatProductoRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
@@ -49,6 +50,9 @@ public class RestSysCatProductoController {
 	
 	@Autowired
 	private IMDetCatApRepo RepoDetCatAp;
+	
+	@Autowired
+	private IMCatConversionRepo catConversion;
 	
 	// Consulta de la lista de sys_usuarios con validacion de token.
 	@GetMapping
@@ -345,11 +349,14 @@ public class RestSysCatProductoController {
          Acumulado.DescripUMC.clear();
          Acumulado.DescripUMT =  new ArrayList<String>();
          Acumulado.DescripUMT.clear();
+         Acumulado.Factor =  new ArrayList<String>();
+         Acumulado.Factor.clear();
          
          String uMDescrip = new String();
          DetCatAp apendice07 = new DetCatAp();
          String uMDescripT = new String();
          DetCatAp apendice07T = new DetCatAp();
+         Float factorCV = (float) 0.0;
          
          for (int i=0; i<todos;i++) {
 //        	 															System.out.print("\n " + "          + RestSysCatProductoController Apendice: " + i + " - " + todosSysCatProducto.get(i).getClveProduc() + " - " + todosSysCatProducto.get(i).getTipProd() + " - " + todosSysCatProducto.get(i).getDescCorIng());
@@ -375,10 +382,15 @@ public class RestSysCatProductoController {
         		 {
         			 uMDescripT = apendice07T.getDesCorta();
         		 }
+        		 factorCV = catConversion.findByDual(sysCatProductoCero.getuMC(), sysCatProductoCero.getuMT());
+        		 if(factorCV == null)
+        		 {
+        			 factorCV = (float) 0.0;
+        		 }
         		 
         		 Acumulado.DescripUMC.add(uMDescrip);
         		 Acumulado.DescripUMT.add(uMDescripT);
-//        		 Acumulado.Factor.add((float) 0.0);
+        		 Acumulado.Factor.add(factorCV.toString());
         		 paginaSysCatProductos.add(sysCatProductoCero);
 //        		 System.out.print("  -- En lista  --" + sysCatProductoCero.gegetClveProduc() );
         	 }
@@ -394,7 +406,7 @@ public class RestSysCatProductoController {
 	 	 
          resultado.DescripUMC = Acumulado.DescripUMC;
          resultado.DescripUMT = Acumulado.DescripUMT;
-	 	 
+         resultado.Factor=Acumulado.Factor;
 	 	 respuesta.setContenido(resultado);
 		 respuesta.setCr("00");
 		 respuesta.setDescripcion("Correcto");

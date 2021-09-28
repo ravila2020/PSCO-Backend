@@ -13,7 +13,7 @@ public class SysCatProductoPagDesc {
 	public List<SysCatProducto> sysCatProductos;
 	public List<String> DescripUMC;
 	public List<String> DescripUMT;
-	public List<Float>  Factor;
+	public List<String> Factor;
 	
 	public int getPage() {
 		return page;
@@ -45,6 +45,23 @@ public class SysCatProductoPagDesc {
 	public void setSysCatProductos(List<SysCatProducto> sysCatProductos) {
 		this.sysCatProductos = sysCatProductos;
 	}
+	public List<String> getDescripUMC() {
+		return DescripUMC;
+	}
+	public void setDescripUMC(List<String> descripUMC) {
+		DescripUMC = descripUMC;
+	}
+	public List<String> getDescripUMT() {
+		return DescripUMT;
+	}
+	public void setDescripUMT(List<String> descripUMT) {
+		DescripUMT = descripUMT;
+	}
+	public List<String> getFactor() {
+		return Factor;
+	}
+	public void setFactor(List<String> factor) {
+		Factor = factor;
+	}
 
-	
 }

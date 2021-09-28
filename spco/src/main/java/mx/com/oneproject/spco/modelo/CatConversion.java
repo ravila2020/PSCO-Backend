@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "cat_conversion")
+@Table(name = "cat_conversion2")
 public class CatConversion {
 
 	@Column(name = "tipo", nullable = false, length = 1)
@@ -24,6 +24,12 @@ public class CatConversion {
 
 	@Column(name = "clvap07", nullable = false, length = 2)
 	private String clvap07;
+
+	@Column(name = "IDUMO", nullable = false, length = 5)
+	private String iDUMO;
+
+	@Column(name = "IDUMD", nullable = false, length = 5)
+	private String iDUMD;
 
 	public String getTipo() {
 		return tipo;
@@ -63,6 +69,24 @@ public class CatConversion {
 
 	public void setClvap07(String clvap07) {
 		this.clvap07 = clvap07;
-	} 
+	}
 
+	public String getiDUMO() {
+		return iDUMO;
+	}
+
+	public void setiDUMO(String iDUMO) {
+		this.iDUMO = iDUMO;
+	}
+
+	public String getiDUMD() {
+		return iDUMD;
+	}
+
+	public void setiDUMD(String iDUMD) {
+		this.iDUMD = iDUMD;
+	}
+
+	
+	
 }
