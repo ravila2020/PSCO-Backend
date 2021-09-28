@@ -385,7 +385,7 @@ public class RestSysCatProductoController {
         		 factorCV = catConversion.findByDual(sysCatProductoCero.getuMC(), sysCatProductoCero.getuMT());
         		 if(factorCV == null)
         		 {
-        			 factorCV = (float) 0.0;
+        			 factorCV = (float) 1.0;
         		 }
         		 
         		 Acumulado.lDescripUMC.add(uMDescrip);
