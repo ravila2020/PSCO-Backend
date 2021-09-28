@@ -11,10 +11,9 @@ public class SysCatProductoPagDesc {
 	int total;
 	int totalPages;
 	public List<SysCatProducto> sysCatProductos;
-	public List<String> DescripUMC;
-	public List<String> DescripUMT;
-	public List<String> Factor;
-	
+	public List<String> lDescripUMC;
+	public List<String> lDescripUMT;
+	public List<String> lFactor;
 	public int getPage() {
 		return page;
 	}
@@ -45,23 +44,25 @@ public class SysCatProductoPagDesc {
 	public void setSysCatProductos(List<SysCatProducto> sysCatProductos) {
 		this.sysCatProductos = sysCatProductos;
 	}
-	public List<String> getDescripUMC() {
-		return DescripUMC;
+	public List<String> getlDescripUMC() {
+		return lDescripUMC;
 	}
-	public void setDescripUMC(List<String> descripUMC) {
-		DescripUMC = descripUMC;
+	public void setlDescripUMC(List<String> lDescripUMC) {
+		this.lDescripUMC = lDescripUMC;
 	}
-	public List<String> getDescripUMT() {
-		return DescripUMT;
+	public List<String> getlDescripUMT() {
+		return lDescripUMT;
 	}
-	public void setDescripUMT(List<String> descripUMT) {
-		DescripUMT = descripUMT;
+	public void setlDescripUMT(List<String> lDescripUMT) {
+		this.lDescripUMT = lDescripUMT;
 	}
-	public List<String> getFactor() {
-		return Factor;
+	public List<String> getlFactor() {
+		return lFactor;
 	}
-	public void setFactor(List<String> factor) {
-		Factor = factor;
+	public void setlFactor(List<String> lFactor) {
+		this.lFactor = lFactor;
 	}
+	
+	
 
 }

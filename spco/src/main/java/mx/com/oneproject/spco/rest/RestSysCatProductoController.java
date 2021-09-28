@@ -345,12 +345,12 @@ public class RestSysCatProductoController {
          paginaSysCatProductos.clear();
          SysCatProductoPagDesc Acumulado = new SysCatProductoPagDesc();         
          
-         Acumulado.DescripUMC =  new ArrayList<String>();
-         Acumulado.DescripUMC.clear();
-         Acumulado.DescripUMT =  new ArrayList<String>();
-         Acumulado.DescripUMT.clear();
-         Acumulado.Factor =  new ArrayList<String>();
-         Acumulado.Factor.clear();
+         Acumulado.lDescripUMC =  new ArrayList<String>();
+         Acumulado.lDescripUMC.clear();
+         Acumulado.lDescripUMT =  new ArrayList<String>();
+         Acumulado.lDescripUMT.clear();
+         Acumulado.lFactor =  new ArrayList<String>();
+         Acumulado.lFactor.clear();
          
          String uMDescrip = new String();
          DetCatAp apendice07 = new DetCatAp();
@@ -388,9 +388,9 @@ public class RestSysCatProductoController {
         			 factorCV = (float) 0.0;
         		 }
         		 
-        		 Acumulado.DescripUMC.add(uMDescrip);
-        		 Acumulado.DescripUMT.add(uMDescripT);
-        		 Acumulado.Factor.add(factorCV.toString());
+        		 Acumulado.lDescripUMC.add(uMDescrip);
+        		 Acumulado.lDescripUMT.add(uMDescripT);
+        		 Acumulado.lFactor.add(factorCV.toString());
         		 paginaSysCatProductos.add(sysCatProductoCero);
 //        		 System.out.print("  -- En lista  --" + sysCatProductoCero.gegetClveProduc() );
         	 }
@@ -404,9 +404,9 @@ public class RestSysCatProductoController {
          resultado.setTotalPages(pagEntero);
          resultado.setSysCatProductos(paginaSysCatProductos);
 	 	 
-         resultado.DescripUMC = Acumulado.DescripUMC;
-         resultado.DescripUMT = Acumulado.DescripUMT;
-         resultado.Factor=Acumulado.Factor;
+         resultado.setlDescripUMC(Acumulado.lDescripUMC);
+         resultado.setlDescripUMT(Acumulado.lDescripUMT);
+         resultado.setlFactor(Acumulado.lFactor);
 	 	 respuesta.setContenido(resultado);
 		 respuesta.setCr("00");
 		 respuesta.setDescripcion("Correcto");
