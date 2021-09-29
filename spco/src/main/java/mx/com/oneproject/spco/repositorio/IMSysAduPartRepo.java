@@ -1,8 +1,10 @@
 package mx.com.oneproject.spco.repositorio;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -28,6 +30,10 @@ public interface IMSysAduPartRepo extends JpaRepository<SysAduPart, SysAduPartId
 
 	@Query("select m from SysAduPart m where m.IdCliProv = :cliente and m.numPart = :parte and m.numPedimento = :pedimento ")
 	SysAduPart findByLlaveUnica(@Param("cliente") String cliente, @Param("parte") String parte, @Param("pedimento") String pedimento);
+
+	@Modifying
+	@Query("delete          from SysAduPart m where m.IdCliProv = :cliente and m.numPart = :parte and m.numPedimento = :pedimento ")
+	int BorraByLlaveUnica(@Param("cliente") String cliente, @Param("parte") String parte, @Param("pedimento") String pedimento);
 
 	@Query("select distinct(m.IdCliProv) from SysAduPart m")
 	List<String> findByClientesUnicos();
