@@ -6,9 +6,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +30,7 @@ import mx.com.oneproject.spco.respuesta.AnsSysAduPartList;
 import mx.com.oneproject.spco.respuesta.AnsSysAduPartUm;
 import mx.com.oneproject.spco.respuesta.SysAduPartPag;
 
-//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
 @RequestMapping("/AduPart")
 public class RestSysAduPartController {
@@ -411,6 +413,64 @@ public class RestSysAduPartController {
 				  } else {
 					respuesta.setCr("83");
 					respuesta.setDescripcion("Ya existe cliente / parte / pedimento");
+			        return respuesta;
+			   	  }
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
+	/**
+	 * Esta clase define el método de modificación de SysAduPart
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+	@PutMapping
+	public AnsSysAduPart modiSysAduPart(HttpServletRequest peticion,
+									@RequestBody SysAduPart NuevoAduPart){
+		
+									System.out.print("\n\n + RestSysAduPartController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysAduPartController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+			//-----------
+			String recinto = NuevoAduPart.getRecinto();
+			String empresa = NuevoAduPart.getEmpresa();
+			empresa = String.format("%04d", Integer.valueOf(empresa));
+			recinto = String.format("%04d", Integer.valueOf(recinto));
+			NuevoAduPart.setRecinto(recinto);
+			NuevoAduPart.setEmpresa(empresa);
+			
+			//-----------
+			  // Validación de token    	
+			AnsSysAduPart respuesta = new AnsSysAduPart();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysAduPartController token: " + token + "\n ");
+			if (token != null) {
+				String user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysAduPartController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+							
+	    	try {
+		    	//-------------existe el producto?
+				if (!aduPart.findByLlave(NuevoAduPart.getIdCliProv(), NuevoAduPart.getNumPart(), NuevoAduPart.getNumPedimento()).isEmpty()){
+		    	//-------------
+					SysAduPart productoProc = aduPart.save(NuevoAduPart);
+					System.out.print(" + RestSysAduPartController insertar Producto: " + productoProc.getIdCliProv() + "\n ");
+					respuesta.setCr("00");
+					respuesta.setDescripcion("Correcto");
+					respuesta.setContenido(NuevoAduPart);
+					return respuesta;
+				  } else {
+					respuesta.setCr("83");
+					respuesta.setDescripcion("No existe cliente / parte / pedimento");
 			        return respuesta;
 			   	  }
 		    	} catch (Exception ex) {
