@@ -344,11 +344,11 @@ public class RestSysAduPartController {
 
 		        		 if (apendice07T == null)
 		        		   {
-		        			 productoProc.setPaisOrigen("Sin descripción");
+		        			 respuesta.setPaisdescripcion("Sin descripción");
 		        			 }
 		        		 else
 		        		 {
-		        			 productoProc.setPaisOrigen(apendice07T.getDesCorta());
+		        			 respuesta.setPaisdescripcion(apendice07T.getDesCorta());
 		        		 }
 						
 						System.out.print(" + RestSysAduPartController consultar  Producto: " + productoProc.getIdCliProv() + "\n ");

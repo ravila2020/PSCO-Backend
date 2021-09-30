@@ -9,6 +9,7 @@ public class AnsSysAduPartUm {
 	private SysAduPart contenido;
 	private String uMCdescripcion;
 	private String uMTdescripcion;
+	private String paisdescripcion;
 	public String getCr() {
 		return cr;
 	}
@@ -39,5 +40,12 @@ public class AnsSysAduPartUm {
 	public void setuMTdescripcion(String uMTdescripcion) {
 		this.uMTdescripcion = uMTdescripcion;
 	}
-
+	public String getPaisdescripcion() {
+		return paisdescripcion;
+	}
+	public void setPaisdescripcion(String paisdescripcion) {
+		this.paisdescripcion = paisdescripcion;
+	}
+	
+	
 }
