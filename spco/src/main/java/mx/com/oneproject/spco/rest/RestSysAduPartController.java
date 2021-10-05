@@ -183,6 +183,7 @@ public class RestSysAduPartController {
 		String empresaS = empresa.toString();
 		empresaS = String.format("%04d", empresa.intValue());
 		recintoS = String.format("%04d", recinto.intValue());
+      	System.out.print(" + RestSysAduPartController listarPag empresaS: " + empresaS + " recintoS: " + recintoS +"\n ");
 	// Preparación de la paginación.
 		boolean enabled = true;
 		SysAduPart SysAduPartCero = new SysAduPart();
@@ -193,13 +194,11 @@ public class RestSysAduPartController {
 		List<SysAduPart> paginaSysAduParts; 
 		Integer SysAduPartInicial, SysAduPartFinal;
 		ArrayList<clienteParte> inicialLista = new ArrayList();
-		
-
-//		inicialLista.add(resultado);
-//		inicialLista.clear();
-                                                                      	System.out.print(" + RestSysAduPartController listarPag page: " + page + " perpage: " + perPage +"\n ");
+		clienteParte llaveAnterior = new clienteParte();
+		llaveAnterior.setIdCliProv("0000000000");
+		llaveAnterior.setNumPart("0000000000");		
     // obtener el total de sys_usuarios
-         todos = aduPart.countByTodo();
+         todos = aduPart.countByTodoER(empresaS,recintoS);
          paginas = (double) todos / perPage;
          pagEntero = (int) paginas;
          if ((paginas-pagEntero)>0)
@@ -209,8 +208,8 @@ public class RestSysAduPartController {
     // Obtener la lista de sys_usuarios solicitada 
          SysAduPartInicial = (perPage  * (page - 1) );
          SysAduPartFinal   = (SysAduPartInicial + perPage) - 1;
-         todosSysAduPart  = aduPart.BuscarByTodo();
-         paginaSysAduParts = aduPart.BuscarByTodo();
+         todosSysAduPart  = aduPart.BuscarByTodoER(empresaS,recintoS);
+         paginaSysAduParts = aduPart.BuscarByTodoER(empresaS,recintoS);
 
          paginaSysAduParts.clear();
          for (int i=0; i<todos;i++) {
@@ -221,12 +220,21 @@ public class RestSysAduPartController {
         			resultado.setIdCliProv("valor");
         			resultado.setNumPart("inicial");
         		 SysAduPartCero = todosSysAduPart.get(i);
-        		 paginaSysAduParts.add(SysAduPartCero);
-        		 resultado.setIdCliProv(SysAduPartCero.getIdCliProv());
-        		 resultado.setNumPart(SysAduPartCero.getNumPart());
-        		 inicialLista.add(resultado);
-        		 inicialLista.get(i).setIdCliProv(SysAduPartCero.getIdCliProv());
-        		 inicialLista.get(i).setNumPart(SysAduPartCero.getNumPart());
+        		 if ((SysAduPartCero.getIdCliProv().equals(llaveAnterior.getIdCliProv()) && (SysAduPartCero.getNumPart().equals(llaveAnterior.getNumPart()))))
+        		 {
+             		llaveAnterior.setIdCliProv(SysAduPartCero.getIdCliProv());
+             		llaveAnterior.setNumPart(SysAduPartCero.getNumPart());	
+        		 } else
+        		 {
+            		paginaSysAduParts.add(SysAduPartCero);
+            		resultado.setIdCliProv(SysAduPartCero.getIdCliProv());
+            		resultado.setNumPart(SysAduPartCero.getNumPart());
+            		inicialLista.add(resultado);
+            		inicialLista.get(i).setIdCliProv(SysAduPartCero.getIdCliProv());
+            		inicialLista.get(i).setNumPart(SysAduPartCero.getNumPart());
+            		llaveAnterior.setIdCliProv(SysAduPartCero.getIdCliProv());
+            		llaveAnterior.setNumPart(SysAduPartCero.getNumPart());	
+        		 }
         	 }
          }
          
