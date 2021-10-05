@@ -22,10 +22,11 @@ import mx.com.oneproject.spco.modelo.SysUsuarios;
 import mx.com.oneproject.spco.repositorio.IMSysAduFactRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFact;
+import mx.com.oneproject.spco.respuesta.AnsSysAduFactCons;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactList;
 import mx.com.oneproject.spco.respuesta.SysAduFactPag;
 
-//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
 @RequestMapping("/AduFact")
 public class RestSysAduFactController {
@@ -294,6 +295,61 @@ public class RestSysAduFactController {
 		 respuesta.setCr("00");
 		 respuesta.setDescripcion("Correcto");
          return respuesta;
+    }
+
+	/**
+	 * Esta clase define el método de consulta paginada de partes del cliente
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+    @GetMapping(path = {"/FactCliPartFact"})
+    public AnsSysAduFactCons ConsultaUnica(
+            @RequestParam(required = false, value = "cliente") String cliente, 
+            @RequestParam(required = false, value = "parte") String parte, 
+            @RequestParam(required = false, value = "factura") String factura, 
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysAduFactCons respuesta = new AnsSysAduFactCons();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+	// Preparación de la paginación.
+		SysAduFact SysAduFactCero = new SysAduFact();
+    // obtener el total de sys_usuarios
+		SysAduFactCero = aduFact.BuscarByLlave(cliente,parte,factura);
+		if(SysAduFactCero == null) {
+			respuesta.setContenido(SysAduFactCero);
+			respuesta.setCr("97");
+			respuesta.setDescripcion("No existe cliente / parte / factura");		
+		}
+		else {
+			respuesta.setContenido(SysAduFactCero);
+			respuesta.setCr("00");
+			respuesta.setDescripcion("Correcto");		
+		}
+
+        return respuesta;
     }
 
 }
