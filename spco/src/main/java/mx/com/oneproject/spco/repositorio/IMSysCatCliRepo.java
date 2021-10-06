@@ -33,4 +33,12 @@ public interface IMSysCatCliRepo extends JpaRepository<SysCatCli, String> {
 	@Query("select n from SysCatCli n where n.IdCliProv in (select distinct(m.IdCliProv) from SysCatCli m)")
 	List<SysCatCli> findByClientesNombresUnicos();
 
+	@Query("select count(*) from SysCatCli m where m.Tipo = :tipo and m.Empresa = :empresa and m.Recinto = :recinto")
+	long countByCliTipos(@Param("tipo") String tipo,@Param("empresa") String empresa, @Param("recinto") String recinto);
+	
+	@Query("select m        from SysCatCli m where m.Tipo = :tipo and m.Empresa = :empresa and m.Recinto = :recinto")
+	List<SysCatCli> findByCliTipos(@Param("tipo") String tipo,@Param("empresa") String empresa, @Param("recinto") String recinto);
+
+
+	
 }
