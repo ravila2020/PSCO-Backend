@@ -30,6 +30,7 @@ import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.AnsSysAduPart;
 import mx.com.oneproject.spco.respuesta.AnsSysAduPartList;
 import mx.com.oneproject.spco.respuesta.AnsSysAduPartListDual;
+import mx.com.oneproject.spco.respuesta.AnsSysAduPartListUni;
 import mx.com.oneproject.spco.respuesta.AnsSysAduPartUm;
 import mx.com.oneproject.spco.respuesta.SysAduPartPag;
 import mx.com.oneproject.spco.result.clienteParte;
@@ -244,7 +245,104 @@ public class RestSysAduPartController {
 		 respuesta.setParteCliente(inicialLista);
 		 return respuesta;
     }
+
     
+	/**
+	 * Esta clase define el método de consulta paginada de partes (lista parte de un cliente)
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+    @GetMapping(path = {"/PartCliUnico"})
+    public AnsSysAduPartListUni listarPagComboPart(@RequestParam(required = false, value = "cliente") String cliente,
+    											HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	int page = 1;
+    	int perPage = 9999;
+    	AnsSysAduPartListUni respuesta = new AnsSysAduPartListUni();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduPartController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduPartController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+      	System.out.print(" + RestSysAduPartController listarPag empresaS: " + empresaS + " recintoS: " + recintoS +"\n ");
+	// Preparación de la paginación.
+		boolean enabled = true;
+		SysAduPart SysAduPartCero = new SysAduPart();
+		Long todos = (long) 0;
+		double paginas = (float) 0.0;
+		Integer pagEntero = 0;
+		List<SysAduPart> todosSysAduPart;
+		List<SysAduPart> paginaSysAduParts; 
+		Integer SysAduPartInicial, SysAduPartFinal;
+		ArrayList<String> inicialListaERC = new ArrayList();
+		clienteParte llaveAnterior = new clienteParte();
+		llaveAnterior.setIdCliProv("0000000000");
+		llaveAnterior.setNumPart("0000000000");		
+    // obtener el total de sys_usuarios
+         todos = aduPart.countByTodoERC(empresaS,recintoS,cliente);
+         paginas = (double) todos / perPage;
+         pagEntero = (int) paginas;
+         if ((paginas-pagEntero)>0)
+         {
+        	 pagEntero++;
+         }
+    // Obtener la lista de sys_usuarios solicitada 
+         SysAduPartInicial = (perPage  * (page - 1) );
+         SysAduPartFinal   = (SysAduPartInicial + perPage) - 1;
+         todosSysAduPart  = aduPart.BuscarByTodoERC(empresaS,recintoS,cliente);
+         paginaSysAduParts = aduPart.BuscarByTodoERC(empresaS,recintoS,cliente);
+
+         paginaSysAduParts.clear();
+         for (int i=0; i<todos;i++) {
+//        	 															System.out.print("\n " + "          + RestSysAduPartController Apendice: " + i + " - " + todosSysAduPart.get(i).getClveProduc() + " - " + todosSysAduPart.get(i).getTipProd() + " - " + todosSysAduPart.get(i).getDescCorIng());
+        	 if(i>=SysAduPartInicial && i<=SysAduPartFinal)
+        	 {
+        			clienteParte resultado = new clienteParte();
+        			resultado.setIdCliProv("valor");
+        			resultado.setNumPart("inicial");
+        		 SysAduPartCero = todosSysAduPart.get(i);
+        		 if ((SysAduPartCero.getNumPart().equals(llaveAnterior.getNumPart())))
+        		 {
+             		llaveAnterior.setIdCliProv(SysAduPartCero.getIdCliProv());
+             		llaveAnterior.setNumPart(SysAduPartCero.getNumPart());	
+        		 } else
+        		 {
+            		paginaSysAduParts.add(SysAduPartCero);
+            		resultado.setIdCliProv(SysAduPartCero.getIdCliProv());
+            		resultado.setNumPart(SysAduPartCero.getNumPart());
+            		inicialListaERC.add(SysAduPartCero.getNumPart());
+            		llaveAnterior.setIdCliProv(SysAduPartCero.getIdCliProv());
+            		llaveAnterior.setNumPart(SysAduPartCero.getNumPart());	
+        		 }
+        	 }
+         }
+         
+         																System.out.print("\n + RestSysAduPartController listarPag todos: " + todos + " paginas: " + paginas + "  " + (paginas-pagEntero ) +"\n ");
+		 respuesta.setCr("00");
+		 respuesta.setDescripcion("Correcto");
+		 respuesta.setContenido(inicialListaERC);
+		 return respuesta;
+    }
+     
 	/**
 	 * Esta clase define el método de consulta paginada de partes por cliente recinto
 	 * @author: Roberto Avila
