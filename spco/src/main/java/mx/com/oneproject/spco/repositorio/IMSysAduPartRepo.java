@@ -51,4 +51,10 @@ public interface IMSysAduPartRepo extends JpaRepository<SysAduPart, SysAduPartId
 	@Query("select m        from SysAduPart m where m.empresa = :empresa and m.recinto = :recinto and m.IdCliProv = :cliente order by m.IdCliProv, m.numPart, m.numPedimento")
 	List<SysAduPart> BuscarByTodoERC(@Param("empresa") String empresa, @Param("recinto") String recinto, @Param("cliente") String cliente);
 	
+	@Query("select count(*) from SysAduPart m where m.empresa = :empresa and m.recinto = :recinto and m.IdCliProv = :cliente and m.numPart = :parte ")
+	long              countByTodoERCP(@Param("empresa") String empresa, @Param("recinto") String recinto, @Param("cliente") String cliente, @Param("parte") String parte);
+
+	@Query("select m        from SysAduPart m where m.empresa = :empresa and m.recinto = :recinto and m.IdCliProv = :cliente and m.numPart = :parte order by m.IdCliProv, m.numPart, m.numPedimento")
+	List<SysAduPart> BuscarByTodoERCP(@Param("empresa") String empresa, @Param("recinto") String recinto, @Param("cliente") String cliente, @Param("parte") String parte);
+	
 }
