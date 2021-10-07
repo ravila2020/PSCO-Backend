@@ -7,7 +7,9 @@ public class AnsSysAduFactCons {
 	private String cr;
 	private String descripcion;
 	private SysAduFact contenido;
-	
+	private String descPais;
+	private String descCortaProd;
+	private String descUMC;
 	public String getCr() {
 		return cr;
 	}
@@ -26,5 +28,26 @@ public class AnsSysAduFactCons {
 	public void setContenido(SysAduFact contenido) {
 		this.contenido = contenido;
 	}
+	public String getDescPais() {
+		return descPais;
+	}
+	public void setDescPais(String descPais) {
+		this.descPais = descPais;
+	}
+	public String getDescCortaProd() {
+		return descCortaProd;
+	}
+	public void setDescCortaProd(String descCortaProd) {
+		this.descCortaProd = descCortaProd;
+	}
+	public String getDescUMC() {
+		return descUMC;
+	}
+	public void setDescUMC(String descUMC) {
+		this.descUMC = descUMC;
+	}
+	
+	
+
 	
 }

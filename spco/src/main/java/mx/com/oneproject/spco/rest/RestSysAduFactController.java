@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
+import mx.com.oneproject.spco.modelo.DetCatAp;
 import mx.com.oneproject.spco.modelo.SysAduFact;
 import mx.com.oneproject.spco.modelo.SysAduFactId;
+import mx.com.oneproject.spco.modelo.SysCatProducto;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
+import mx.com.oneproject.spco.repositorio.IMDetCatApRepo;
 import mx.com.oneproject.spco.repositorio.IMSysAduFactRepo;
+import mx.com.oneproject.spco.repositorio.IMSysCatProductoRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFact;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactCons;
@@ -36,6 +40,12 @@ public class RestSysAduFactController {
 	
 	@Autowired
 	private IMSysUserRepo sysUser;
+
+	@Autowired
+	private IMDetCatApRepo RepoDetCatAp;
+	
+	@Autowired
+	private IMSysCatProductoRepo sysProd;
 
 	/**
 	 * Esta clase define el método de consulta plana de facturas
@@ -344,9 +354,42 @@ public class RestSysAduFactController {
 			respuesta.setDescripcion("No existe cliente / parte / factura");		
 		}
 		else {
-			respuesta.setContenido(SysAduFactCero);
-			respuesta.setCr("00");
-			respuesta.setDescripcion("Correcto");		
+			 DetCatAp apendice07T = new DetCatAp();
+			 List<SysCatProducto> todosSysCatProducto;
+			 SysCatProducto producto = new SysCatProducto();
+
+	   		 apendice07T = RepoDetCatAp.findByCampos("AP04", SysAduFactCero.getPaisFact(), "X");
+	   		 if (apendice07T == null)
+	   		   {
+	   			 respuesta.setDescPais("Clave de país sin descripción");
+	   			 }
+	   		 else
+	   		 {
+	   			 respuesta.setDescPais(apendice07T.getDesCorta());
+	   		 }			
+	   		 apendice07T = RepoDetCatAp.findByCampos("AP07", SysAduFactCero.getUnidadDeMedida(), "X");
+	   		 if (apendice07T == null)
+	   		   {
+	   			 respuesta.setDescUMC("Clave de unidad de medida sin descripción");
+	   			 }
+	   		 else
+	   		 {
+	   			 respuesta.setDescUMC(apendice07T.getDesCorta());
+	   		 }	
+			 todosSysCatProducto  = sysProd.findByClave(SysAduFactCero.getProducto(),empresaS,recintoS);
+	   		 if (todosSysCatProducto.isEmpty())
+	   		   {
+	   			 respuesta.setDescCortaProd("Producto sin descripción corta");
+	   			 }
+	   		 else
+	   		 {
+	   			producto = todosSysCatProducto.get(0);
+	   			respuesta.setDescCortaProd(producto.getDescCorta());
+	   		 }	
+	   		 
+			 respuesta.setContenido(SysAduFactCero);
+			 respuesta.setCr("00");
+			 respuesta.setDescripcion("Correcto");		
 		}
 
         return respuesta;
