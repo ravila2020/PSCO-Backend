@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ import mx.com.oneproject.spco.respuesta.AnsSysAduFactCons;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactList;
 import mx.com.oneproject.spco.respuesta.SysAduFactPag;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/AduFact")
 public class RestSysAduFactController {
@@ -395,4 +396,67 @@ public class RestSysAduFactController {
         return respuesta;
     }
 
+	/**
+	 * Esta clase define el método de borrado de partes del cliente
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+    @DeleteMapping(path = {"/FactCliPartFact"})
+    public AnsSysAduFact Borrado(
+            @RequestParam(required = false, value = "cliente") String cliente, 
+            @RequestParam(required = false, value = "parte") String parte, 
+            @RequestParam(required = false, value = "factura") String factura, 
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysAduFact respuesta = new AnsSysAduFact();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+	// Preparación de la paginación.
+		SysAduFact SysAduFactCero = new SysAduFact();
+    // obtener el total de sys_usuarios
+		SysAduFactCero = aduFact.BuscarByLlave(cliente,parte,factura);
+		if(SysAduFactCero == null) {
+			respuesta.setContenido(SysAduFactCero);
+			respuesta.setCr("97");
+			respuesta.setDescripcion("No existe cliente / parte / factura");		
+		}
+		else {
+//			SysAduFactId llaveBorrado = new SysAduFactId();
+//			llaveBorrado.setIdCliProv(cliente);
+//			llaveBorrado.setiDImpoEexpo("1");
+//			llaveBorrado.setNumFact(factura);
+//			llaveBorrado.setNumPart(parte);
+//			aduFact.deleteById(llaveBorrado);
+			aduFact.delete(SysAduFactCero);
+			 respuesta.setContenido(SysAduFactCero);
+			 respuesta.setCr("00");
+			 respuesta.setDescripcion("Correcto");		
+		}
+
+        return respuesta;
+    }
+
+    
 }

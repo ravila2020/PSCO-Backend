@@ -3,6 +3,7 @@ package mx.com.oneproject.spco.repositorio;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -35,5 +36,9 @@ public interface IMSysAduFactRepo extends JpaRepository<SysAduFact, SysAduFactId
 
 	@Query("select m from SysAduFact m  where m.IdCliProv = :cliente and m.numPart = :parte and m.numFact = :factura")
 	SysAduFact BuscarByLlave(@Param("cliente") String cliente, @Param("parte") String parte, @Param("factura") String factura);
+
+	@Modifying
+	@Query("delete  from SysAduFact m  where m.IdCliProv = :cliente and m.numPart = :parte and m.numFact = :factura")
+	int  BorradoByProducto(@Param("cliente") String cliente, @Param("parte") String parte, @Param("factura") String factura);
 
 }
