@@ -10,7 +10,7 @@ public class SysCatAgadPag {
 	int perPage;
 	int total;
 	int totalPages;
-	private List<SysCatAgad> sysAduFacturas;
+	private List<SysCatAgad> sysAgads;
 	
 	public int getPage() {
 		return page;
@@ -36,11 +36,13 @@ public class SysCatAgadPag {
 	public void setTotalPages(int totalPages) {
 		this.totalPages = totalPages;
 	}
-	public List<SysCatAgad> getSysAduFacturas() {
-		return sysAduFacturas;
+	public List<SysCatAgad> getSysAgads() {
+		return sysAgads;
 	}
-	public void setSysAduFacturas(List<SysCatAgad> sysAduFacturas) {
-		this.sysAduFacturas = sysAduFacturas;
+	public void setSysAgads(List<SysCatAgad> sysAgads) {
+		this.sysAgads = sysAgads;
 	}
+	
+
 
 }

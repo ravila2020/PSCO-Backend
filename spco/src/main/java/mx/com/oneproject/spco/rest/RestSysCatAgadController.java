@@ -243,7 +243,7 @@ public class RestSysCatAgadController {
          resultado.setPerPage(perPage);
          resultado.setTotal((int) catAgad.countByER(empresaS,recintoS));
          resultado.setTotalPages(pagEntero);
-         resultado.setSysAduFacturas(paginaSysCatAgads);
+         resultado.setSysAgads(paginaSysCatAgads);
 	 	 respuesta.setContenido(resultado);
 		 respuesta.setCr("00");
 		 respuesta.setDescripcion("Correcto");
