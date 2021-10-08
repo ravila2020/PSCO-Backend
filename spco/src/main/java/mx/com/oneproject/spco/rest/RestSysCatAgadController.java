@@ -8,7 +8,6 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,11 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
+import mx.com.oneproject.spco.modelo.DetCatAp;
 import mx.com.oneproject.spco.modelo.SysCatAgad;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
+import mx.com.oneproject.spco.repositorio.IMCodPosRepo;
+import mx.com.oneproject.spco.repositorio.IMDetCatApRepo;
 import mx.com.oneproject.spco.repositorio.IMSysCatAgadRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.AnsSysCatAgad;
+import mx.com.oneproject.spco.respuesta.AnsSysCatAgadDesc;
 import mx.com.oneproject.spco.respuesta.AnsSysCatAgadLU;
 import mx.com.oneproject.spco.respuesta.AnsSysCatAgagList;
 import mx.com.oneproject.spco.respuesta.SysCatAgadPag;
@@ -39,7 +42,11 @@ public class RestSysCatAgadController {
 	@Autowired
 	private IMSysUserRepo sysUser;
 
-	
+	@Autowired
+	private IMDetCatApRepo RepoDetCatAp;
+
+	@Autowired
+	private IMCodPosRepo codigoPostal;	
 	/**
 	 * Esta clase define el método de consulta plana del catalogo de agentes aduanales
 	 * @author: Roberto Avila
@@ -389,6 +396,85 @@ public class RestSysCatAgadController {
 					catAgad.deleteById(numPat);
 					respuesta.setCr("00");
 					respuesta.setDescripcion("Correcto");
+					return respuesta;
+			   	  }
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
+	/**
+	 * Esta clase define el método de consulta de agentes aduanales
+	 * @author: Roberto Avila
+	 * @version: 07/10/2021/A
+	 * @see 
+	 */	
+	@GetMapping(path = {"/ConsAgenteDesc"})
+	public AnsSysCatAgadDesc consSysCatAgadDesc(@RequestParam(required = false, value = "numPat") String numPat,
+			                        HttpServletRequest peticion){
+		
+									System.out.print("\n\n + RestSysCatAgadController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysCatAgadController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+			  // Validación de token    	
+			AnsSysCatAgadDesc respuesta = new AnsSysCatAgadDesc();
+			String user = new String();
+			String llave = new String();
+    		llave=numPat;
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysCatAgadController token: " + token + "\n ");
+			if (token != null) {
+			      user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysCatAgadController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+			SysUsuarios agadProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+			BigDecimal recinto = agadProc.getIdRecinto();
+			BigDecimal empresa = agadProc.getIdEmpresa();
+			String recintoS = recinto.toString();
+			String empresaS = empresa.toString();
+			empresaS = String.format("%04d", empresa.intValue());
+			recintoS = String.format("%04d", recinto.intValue());
+							
+	    	try {
+		    	//-------------existe el producto?
+				if (catAgad.findById(llave).isEmpty()){
+		    	//-------------
+					respuesta.setCr("83");
+					respuesta.setDescripcion("No existe agente");
+			        return respuesta;
+			     } else {
+					Optional<SysCatAgad> AgadProc = catAgad.findById(llave);
+					SysCatAgad AgadProc01 = AgadProc.get();
+					DetCatAp apendice07T = new DetCatAp();
+	//				List<SysCatProducto> todosSysCatProducto;
+	//				SysCatProducto producto = new SysCatProducto();
+					 String estadoDesc = codigoPostal.findByClaveEstado(AgadProc01.getEstado());
+					 String estadoCd   = codigoPostal.findByClaveCd(AgadProc01.getcP(),AgadProc01.getMunicipio(),AgadProc01.getEstado());
+					 String estadoMpio = codigoPostal.findByClaveMpio(AgadProc01.getcP(),AgadProc01.getMunicipio(),AgadProc01.getEstado(),AgadProc01.getLocalidad());
+					 
+					 respuesta.setDescEstado(estadoDesc);
+					 respuesta.setDescMunic(estadoMpio);
+					 respuesta.setDesLocal(estadoCd);
+			   		 apendice07T = RepoDetCatAp.findByCampos("AP04", AgadProc01.getPais(), "X");
+			   		 if (apendice07T == null)
+			   		   {
+			   			 respuesta.setDescPais("Clave de país sin descripción");
+			   			 }
+			   		 else
+			   		 {
+			   			 respuesta.setDescPais(apendice07T.getDesCorta());
+			   		 }			
+
+					respuesta.setCr("00");
+					respuesta.setDescripcion("Correcto");
+					respuesta.setContenido(AgadProc.get());
 					return respuesta;
 			   	  }
 		    	} catch (Exception ex) {
