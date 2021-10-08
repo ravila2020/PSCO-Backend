@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,7 @@ import mx.com.oneproject.spco.respuesta.AnsSysCatAgadLU;
 import mx.com.oneproject.spco.respuesta.AnsSysCatAgagList;
 import mx.com.oneproject.spco.respuesta.SysCatAgadPag;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/CatAgad")
 public class RestSysCatAgadController {
@@ -337,6 +338,63 @@ public class RestSysCatAgadController {
 		 respuesta.setDescripcion("Correcto");
          return respuesta;
     }
-	
+
+	/**
+	 * Esta clase define el método de consulta de agentes aduanales
+	 * @author: Roberto Avila
+	 * @version: 07/10/2021/A
+	 * @see 
+	 */	
+	@DeleteMapping(path = {"/BorraAgente"})
+	public AnsSysCatAgad borraAgente(@RequestParam(required = false, value = "numPat") String numPat,
+			                        HttpServletRequest peticion){
+		
+									System.out.print("\n\n + RestSysCatAgadController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysCatAgadController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+			  // Validación de token    	
+			AnsSysCatAgad respuesta = new AnsSysCatAgad();
+			String user = new String();
+			String llave = new String();
+    		llave=numPat;
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysCatAgadController token: " + token + "\n ");
+			if (token != null) {
+			      user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysCatAgadController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+			SysUsuarios agadProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+			BigDecimal recinto = agadProc.getIdRecinto();
+			BigDecimal empresa = agadProc.getIdEmpresa();
+			String recintoS = recinto.toString();
+			String empresaS = empresa.toString();
+			empresaS = String.format("%04d", empresa.intValue());
+			recintoS = String.format("%04d", recinto.intValue());
+							
+	    	try {
+		    	//-------------existe el producto?
+				if (catAgad.findById(llave).isEmpty()){
+		    	//-------------
+					respuesta.setCr("83");
+					respuesta.setDescripcion("No existe agente");
+			        return respuesta;
+			     } else {
+					catAgad.deleteById(numPat);
+					respuesta.setCr("00");
+					respuesta.setDescripcion("Correcto");
+					return respuesta;
+			   	  }
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
 	
 }
