@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -119,6 +120,65 @@ public class RestSysCatAgadController {
 	}
 
 	/**
+	 * Esta clase define el método de modificacion de agentes aduanales
+	 * @author: Roberto Avila
+	 * @version: 07/10/2021/A
+	 * @see 
+	 */	
+	@PutMapping
+	public AnsSysCatAgad modiSysCatAgad(HttpServletRequest peticion,
+									@RequestBody SysCatAgad ModifAgad){
+		
+									System.out.print("\n\n + RestSysCatAgadController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysCatAgadController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+ 	  // Validación de token    	
+			AnsSysCatAgad respuesta = new AnsSysCatAgad();
+			String user = new String();
+			String llave = new String();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysCatAgadController token: " + token + "\n ");
+			if (token != null) {
+				  user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysCatAgadController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+			SysUsuarios agadProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+			BigDecimal recinto = agadProc.getIdRecinto();
+			BigDecimal empresa = agadProc.getIdEmpresa();
+			String recintoS = recinto.toString();
+			String empresaS = empresa.toString();
+			empresaS = String.format("%04d", empresa.intValue());
+			recintoS = String.format("%04d", recinto.intValue());
+							
+	    	try {
+		    	//-------------existe el producto?
+	    		llave=ModifAgad.getNumPat();
+				if (catAgad.findById(llave).isEmpty()){
+					respuesta.setCr("87");
+					respuesta.setDescripcion("No existe agente");
+			        return respuesta;
+		    	//-------------
+				  } else {
+					SysCatAgad AgadProc = catAgad.save(ModifAgad);
+					System.out.print(" + RestSysCatAgadController insertar SysCatAgad: " + AgadProc.getNomAgAdu() + "\n ");
+					respuesta.setCr("00");
+					respuesta.setDescripcion("Correcto");
+					respuesta.setContenido(ModifAgad);
+					return respuesta;
+			   	  }
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
+	/**
 	 * Esta clase define el método de consulta de agentes aduanales
 	 * @author: Roberto Avila
 	 * @version: 07/10/2021/A
@@ -166,9 +226,15 @@ public class RestSysCatAgadController {
 			        return respuesta;
 			     } else {
 					Optional<SysCatAgad> AgadProc = catAgad.findById(llave);
+					SysCatAgad agenteDev = AgadProc.get();
+					agenteDev.setCalle(AgadProc.get().getCalle().trim());
+					agenteDev.setColonia(AgadProc.get().getColonia().trim());
+					agenteDev.seteMail(AgadProc.get().geteMail().trim());
+					agenteDev.setTel(AgadProc.get().getTel().trim());
+					
 					respuesta.setCr("00");
 					respuesta.setDescripcion("Correcto");
-					respuesta.setContenido(AgadProc.get());
+					respuesta.setContenido(agenteDev);
 					return respuesta;
 			   	  }
 		    	} catch (Exception ex) {
@@ -455,13 +521,21 @@ public class RestSysCatAgadController {
 					DetCatAp apendice07T = new DetCatAp();
 	//				List<SysCatProducto> todosSysCatProducto;
 	//				SysCatProducto producto = new SysCatProducto();
+					
+	//				SysCatAgad agenteDev = AgadProc.get();
+					AgadProc01.setCalle(AgadProc.get().getCalle().trim());
+					AgadProc01.setColonia(AgadProc.get().getColonia().trim());
+					AgadProc01.seteMail(AgadProc.get().geteMail().trim());
+					AgadProc01.setTel(AgadProc.get().getTel().trim());
+					AgadProc01.setNomAgAdu(AgadProc.get().getNomAgAdu().trim());
+
 					 String estadoDesc = codigoPostal.findByClaveEstado(AgadProc01.getEstado());
 					 String estadoCd   = codigoPostal.findByClaveCd(AgadProc01.getcP(),AgadProc01.getMunicipio(),AgadProc01.getEstado());
 					 String estadoMpio = codigoPostal.findByClaveMpio(AgadProc01.getcP(),AgadProc01.getMunicipio(),AgadProc01.getEstado(),AgadProc01.getLocalidad());
 					 
-					 respuesta.setDescEstado(estadoDesc);
-					 respuesta.setDescMunic(estadoMpio);
-					 respuesta.setDesLocal(estadoCd);
+					 respuesta.setDescEstado(estadoDesc.trim());
+					 respuesta.setDescMunic(estadoMpio.trim());
+					 respuesta.setDesLocal(estadoCd.trim());
 			   		 apendice07T = RepoDetCatAp.findByCampos("AP04", AgadProc01.getPais(), "X");
 			   		 if (apendice07T == null)
 			   		   {
@@ -469,12 +543,12 @@ public class RestSysCatAgadController {
 			   			 }
 			   		 else
 			   		 {
-			   			 respuesta.setDescPais(apendice07T.getDesCorta());
+			   			 respuesta.setDescPais(apendice07T.getDesCorta().trim());
 			   		 }			
 
 					respuesta.setCr("00");
 					respuesta.setDescripcion("Correcto");
-					respuesta.setContenido(AgadProc.get());
+					respuesta.setContenido(AgadProc01);
 					return respuesta;
 			   	  }
 		    	} catch (Exception ex) {
