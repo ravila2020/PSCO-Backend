@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +32,7 @@ import mx.com.oneproject.spco.respuesta.AnsSysAduFactCons;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactList;
 import mx.com.oneproject.spco.respuesta.SysAduFactPag;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/AduFact")
 public class RestSysAduFactController {
@@ -124,6 +125,70 @@ public class RestSysAduFactController {
 		    	}
 	}
 
+	/**
+	 * Esta clase define el método de modificacion de SysAduFact
+	 * @author: Roberto Avila
+	 * @version: 15/10/2021/A
+	 * @see 
+	 */	
+	@PutMapping
+	public AnsSysAduFact modifSysAduFact(HttpServletRequest peticion,
+									@RequestBody SysAduFact ModifAduFact){
+		
+									System.out.print("\n\n + RestSysAduFactController Modificacion: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysAduFactController Modificacion: " + peticion.getHeader("Authorization")+ "\n ");	
+			//-----------
+			String recinto = ModifAduFact.getRecinto();
+			String empresa = ModifAduFact.getEmpresa();
+			empresa = String.format("%04d", Integer.valueOf(empresa));
+			recinto = String.format("%04d", Integer.valueOf(recinto));
+			ModifAduFact.setRecinto(recinto);
+			ModifAduFact.setEmpresa(empresa);
+			
+			//-----------
+			  // Validación de token    	
+			AnsSysAduFact respuesta = new AnsSysAduFact();
+			SysAduFactId llave = new SysAduFactId();
+	    	String token = peticion.getHeader("Authorization");
+	                                                                		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+			if (token != null) {
+				String user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+							
+	    	try {
+		    	//-------------existe el producto?
+	    		llave.setIdCliProv(ModifAduFact.getIdCliProv());
+	    		llave.setNumPart(ModifAduFact.getNumPart());
+	    		llave.setNumFact(ModifAduFact.getNumFact());
+	    		llave.setiDImpoEexpo(ModifAduFact.getiDImpoEexpo());
+				if (aduFact.findById(llave).isEmpty()){
+		    	//-------------
+					respuesta.setCr("83");
+					respuesta.setDescripcion("No existe cliente / parte / factura / IndImpExp");
+			        return respuesta;
+				  } else {
+						SysAduFact facturaProc = aduFact.save(ModifAduFact);
+						System.out.print(" + RestSysAduFactController modifica Factura: " + facturaProc.getIdCliProv() + "\n ");
+						respuesta.setCr("00");
+						respuesta.setDescripcion("Correcto");
+						respuesta.setContenido(ModifAduFact);
+						return respuesta;
+			   	  }
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
+	
 	
 	/**
 	 * Esta clase define el método de consulta paginada de partes del cliente

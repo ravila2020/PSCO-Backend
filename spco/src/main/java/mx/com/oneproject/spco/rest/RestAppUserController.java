@@ -100,9 +100,9 @@ public class RestAppUserController {
 		    Optional<VigenciaToken> Vtoken = vigencia.findById(Integer.valueOf(secuencia));
 			System.out.print("\n +++++ RestAppUserController Usuario: " + user + " Elemento: " + secuencia + "\n Token : "+ Vtoken.get().getToken()+ "\n ");
 			if(token.equals("Bearer" + Vtoken.get().getToken()))
-				{System.out.print("OK");}
+				{System.out.print("\n OK \n");}
 			else 
-				{System.out.print("NoOk");}
+				{System.out.print("\n NoOk \n");}
 			respuesta.setCr("00");
 			respuesta.setDescripcion("Correcto");	
 			respuesta.setContenido(repAppUser.findByEnabled(enabled));			

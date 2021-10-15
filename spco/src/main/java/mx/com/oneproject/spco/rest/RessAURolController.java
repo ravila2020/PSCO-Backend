@@ -15,17 +15,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.jsonwebtoken.Jwts;
+import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.modelo.AppUser;
 import mx.com.oneproject.spco.modelo.AppUserRole;
 import mx.com.oneproject.spco.modelo.AppUserRoleId;
 import mx.com.oneproject.spco.modelo.RolePermission;
 import mx.com.oneproject.spco.repositorio.IMAppUserRepo;
 import mx.com.oneproject.spco.repositorio.IMAppUserRoleRepo;
+import mx.com.oneproject.spco.repositorio.IMLogTransacctionRepo;
 import mx.com.oneproject.spco.repositorio.IMPermissionRepo;
 import mx.com.oneproject.spco.repositorio.IMRolePermissionRepo;
 import mx.com.oneproject.spco.result.AnsUserRolList;
-
-import io.jsonwebtoken.Jwts;
 @CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
 @RequestMapping("/UserRol")
@@ -43,6 +46,9 @@ public class RessAURolController {
 	@Autowired
 	private IMAppUserRepo usuarioJWT;
 
+	@Autowired
+	private IMLogTransacctionRepo repLog;
+	
 	// Consulta de lista de todos los usuarios rol con validacion de token.
 	@GetMapping
 	public AnsUserRolList listar(HttpServletRequest peticion) {
@@ -113,7 +119,16 @@ public class RessAURolController {
 		System.out.print("\n\n + RessAURolController contenido de token: " + token + "\n ");
 		AnsUserRolList Respuesta = new AnsUserRolList();
 		String userPeticion;
-
+//*
+		try {
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = mapper.writeValueAsString(NuevoUserRol);
+		System.out.print(" + Objeto: " + jsonInString);
+    	} catch (Exception ex) {
+    		throw new ApiRequestException("Upsi");
+    	} 
+		
+//*
 		if (token != null) {
 			String user = Jwts.parser().setSigningKey("0neProj3ct").parseClaimsJws(token.replace("Bearer", ""))
 					.getBody().getSubject();
