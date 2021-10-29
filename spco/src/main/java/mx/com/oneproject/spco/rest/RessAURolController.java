@@ -29,7 +29,7 @@ import mx.com.oneproject.spco.repositorio.IMLogTransacctionRepo;
 import mx.com.oneproject.spco.repositorio.IMPermissionRepo;
 import mx.com.oneproject.spco.repositorio.IMRolePermissionRepo;
 import mx.com.oneproject.spco.result.AnsUserRolList;
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
 @RequestMapping("/UserRol")
 public class RessAURolController {

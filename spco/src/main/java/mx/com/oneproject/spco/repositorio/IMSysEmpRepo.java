@@ -1,6 +1,7 @@
 package mx.com.oneproject.spco.repositorio;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,8 @@ public interface IMSysEmpRepo extends JpaRepository<SysEmpresa, BigDecimal> {
 
 	@Query("select m        from SysEmpresa m where m.idEmpresa = :clave and  m.estatus = 'A'")
 	Optional<SysEmpresa> findByClave(@Param("clave") BigDecimal clave);
+	
+	@Query("select distinct(m.idEmpresa) from SysEmpresa m where m.estatus = 'A'")
+	List<String> findByUnicos();
+	
 }

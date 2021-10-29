@@ -15,7 +15,7 @@ import mx.com.oneproject.spco.modelo.SysRecintos;
 import mx.com.oneproject.spco.repositorio.IMSysRecinRepo;
 import mx.com.oneproject.spco.result.AnsSysRecintos;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
 @RequestMapping("/Recintos")
 public class RestSysRecintosController {

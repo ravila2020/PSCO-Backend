@@ -23,7 +23,7 @@ import mx.com.oneproject.spco.modelo.HistTipoCambio;
 import mx.com.oneproject.spco.repositorio.IMHistTipoCambioRepo;
 import mx.com.oneproject.spco.result.AnsSysCatProductoTipo;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
 @RequestMapping("/TipoCambio")
 public class RestBMTipCambioController {

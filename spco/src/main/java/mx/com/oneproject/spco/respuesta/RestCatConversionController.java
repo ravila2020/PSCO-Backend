@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import mx.com.oneproject.spco.modelo.CatConversion;
 import mx.com.oneproject.spco.repositorio.IMCatConversionRepo;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/CatConversion")
 public class RestCatConversionController {

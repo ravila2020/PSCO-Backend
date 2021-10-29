@@ -36,7 +36,7 @@ import mx.com.oneproject.spco.respuesta.AnsSysAduPartUm;
 import mx.com.oneproject.spco.respuesta.SysAduPartPag;
 import mx.com.oneproject.spco.result.clienteParte;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
 @RequestMapping("/AduPart")
 public class RestSysAduPartController {

@@ -17,7 +17,7 @@ import mx.com.oneproject.spco.repositorio.IMCodPosRepo;
 import mx.com.oneproject.spco.result.AnsCodPostal;
 import mx.com.oneproject.spco.result.AnsCodPostalMult;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
 @RequestMapping("/CP")
 public class RestCodPostController {

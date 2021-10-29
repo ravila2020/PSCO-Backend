@@ -16,7 +16,7 @@ import mx.com.oneproject.spco.repositorio.IMCtarcFracc1Repo;
 import mx.com.oneproject.spco.result.AnsCtarFracc1;
 import mx.com.oneproject.spco.result.AnsCtarFraccCons;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
 @RequestMapping("/Fracc")
 public class RestCtarcFracc1Controller {

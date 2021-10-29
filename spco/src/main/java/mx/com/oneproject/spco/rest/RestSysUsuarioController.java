@@ -26,7 +26,7 @@ import mx.com.oneproject.spco.respuesta.SysUserPag;
 import mx.com.oneproject.spco.result.AnsSysUser;
 import mx.com.oneproject.spco.result.AnsSysUserPagList;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
 @RequestMapping("/SysUser")
 public class RestSysUsuarioController {

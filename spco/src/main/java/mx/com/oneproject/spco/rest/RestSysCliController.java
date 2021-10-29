@@ -35,7 +35,7 @@ import mx.com.oneproject.spco.result.AnsSysCatCliList;
 import mx.com.oneproject.spco.result.AnsSysCatCliListCli;
 import mx.com.oneproject.spco.result.AnsSysCatCliTipo;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
 @RequestMapping("/Cli")
 public class RestSysCliController {

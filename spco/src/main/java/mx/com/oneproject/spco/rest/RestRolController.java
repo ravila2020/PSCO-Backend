@@ -31,7 +31,7 @@ import mx.com.oneproject.spco.result.GenericResponse;
 import mx.com.oneproject.spco.respuesta.RolPag;
 import io.jsonwebtoken.Jwts;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
 @RequestMapping("/Rol")
 public class RestRolController {

@@ -36,7 +36,7 @@ import mx.com.oneproject.spco.result.AnsSysCatProductoListUm;
 import mx.com.oneproject.spco.result.AnsSysCatProductoTipo;
 import mx.com.oneproject.spco.result.AnsSysCatProductoUm;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RestController
 @RequestMapping("/CatProducto")
 public class RestSysCatProductoController {
