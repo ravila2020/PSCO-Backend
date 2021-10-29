@@ -7,7 +7,7 @@ public class SysAduFactId  implements Serializable {
 	private String IdCliProv;
 	private String numPart;
 	private String numFact;
-	private String iDImpoEexpo;
+	private String numPedimentoEntrada;
 	
 	public String getIdCliProv() {
 		return IdCliProv;
@@ -27,12 +27,13 @@ public class SysAduFactId  implements Serializable {
 	public void setNumFact(String numFact) {
 		this.numFact = numFact;
 	}
-	public String getiDImpoEexpo() {
-		return iDImpoEexpo;
+	public String getNumPedimentoEntrada() {
+		return numPedimentoEntrada;
 	}
-	public void setiDImpoEexpo(String iDImpoEexpo) {
-		this.iDImpoEexpo = iDImpoEexpo;
+	public void setNumPedimentoEntrada(String numPedimentoEntrada) {
+		this.numPedimentoEntrada = numPedimentoEntrada;
 	}
+	
 
 	
 }

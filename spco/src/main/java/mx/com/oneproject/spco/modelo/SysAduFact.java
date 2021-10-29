@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @IdClass(SysAduFactId.class)
-@Table(name = "SYS_ADU_FACT")
+@Table(name = "SYS_ADU_FACT3")
 public class SysAduFact {
 
 	
@@ -24,15 +24,16 @@ public class SysAduFact {
 	@Id
 	@Column(name = "ID_impo_expo", nullable = false, length = 1)
 	private String iDImpoEexpo;
-	
 	@Column(name = "Fecha_Entrada", nullable = false, length = 10)   
 	private String fechaEntrada;   	
 	@Column(name = "Tipo_Cambio", nullable = false)          
 	private Float tipoCambio; 
 	@Column(name = "Pais_Fact", nullable = false, length = 3)      
 	private String paisFact; 	
+	@Id
 	@Column(name = "Num_Pedimento_entrada", nullable = false, length = 7)
 	private String numPedimentoEntrada;	
+
 	@Column(name = "Num_Pedimento_salida", nullable = false, length = 7)
 	private String numPedimentoSalida;	
 	@Column(name = "CLV_PEDI", nullable = false, length = 2)      
@@ -105,6 +106,10 @@ public class SysAduFact {
 	private String userMod;
 	@Column(name = "Estatus", nullable = false, length = 2)     
 	private String estatus;
+	@Column(name = "EntSal", nullable = false, length = 1)     
+	private String entSal;
+
+	
 	public String getIdCliProv() {
 		return IdCliProv;
 	}
@@ -368,6 +373,12 @@ public class SysAduFact {
 	}
 	public void setEstatus(String estatus) {
 		this.estatus = estatus;
+	}
+	public String getEntSal() {
+		return entSal;
+	}
+	public void setEntSal(String entSal) {
+		this.entSal = entSal;
 	}
 	
 

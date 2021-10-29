@@ -106,7 +106,7 @@ public class RestSysAduFactController {
 	    		llave.setIdCliProv(NuevoAduFact.getIdCliProv());
 	    		llave.setNumPart(NuevoAduFact.getNumPart());
 	    		llave.setNumFact(NuevoAduFact.getNumFact());
-	    		llave.setiDImpoEexpo(NuevoAduFact.getiDImpoEexpo());
+	    		llave.setNumPedimentoEntrada(NuevoAduFact.getNumPedimentoEntrada());
 				if (aduFact.findById(llave).isEmpty()){
 		    	//-------------
 					SysAduFact facturaProc = aduFact.save(NuevoAduFact);
@@ -169,8 +169,10 @@ public class RestSysAduFactController {
 	    		llave.setIdCliProv(ModifAduFact.getIdCliProv());
 	    		llave.setNumPart(ModifAduFact.getNumPart());
 	    		llave.setNumFact(ModifAduFact.getNumFact());
-	    		llave.setiDImpoEexpo(ModifAduFact.getiDImpoEexpo());
-				if (aduFact.findById(llave).isEmpty()){
+//	    		llave.setiDImpoEexpo(ModifAduFact.getiDImpoEexpo());
+	    		llave.setNumPedimentoEntrada(ModifAduFact.getNumPedimentoEntrada());
+
+	    		if (aduFact.findById(llave).isEmpty()){
 		    	//-------------
 					respuesta.setCr("83");
 					respuesta.setDescripcion("No existe cliente / parte / factura / IndImpExp");
