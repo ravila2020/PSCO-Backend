@@ -32,6 +32,17 @@ public class RestSysRecintosController {
 		
 		return repoRecinto.findAll();
 	}
+
+	// Consulta de la lista de recintos.
+	@GetMapping(path = {"/Lista"})
+	public List<String> lista(HttpServletRequest peticion){
+		
+		System.out.print("\n\n + RestSysRecintosController listar: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+		System.out.print("\n\n + RestSysRecintosController listar: " + peticion.getHeader("Authorization")+ "\n ");	
+		
+		return repoRecinto.findByUnicos();
+	}
+
 	
 	// Consulta de la lista de recintos con validacion de token.
 	@GetMapping(path = {"/ListaRecintos"})
