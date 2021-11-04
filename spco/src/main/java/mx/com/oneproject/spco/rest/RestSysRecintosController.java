@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.modelo.SysRecintos;
 import mx.com.oneproject.spco.repositorio.IMSysRecinRepo;
+import mx.com.oneproject.spco.respuesta.AnsSysAduPartListUni;
 import mx.com.oneproject.spco.result.AnsSysRecintos;
 
 @CrossOrigin(origins = "*",maxAge = 3600)
@@ -35,12 +36,16 @@ public class RestSysRecintosController {
 
 	// Consulta de la lista de recintos.
 	@GetMapping(path = {"/Lista"})
-	public List<String> lista(HttpServletRequest peticion){
+	public AnsSysAduPartListUni lista(HttpServletRequest peticion){
 		
 		System.out.print("\n\n + RestSysRecintosController listar: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
 		System.out.print("\n\n + RestSysRecintosController listar: " + peticion.getHeader("Authorization")+ "\n ");	
 		
-		return repoRecinto.findByUnicos();
+		AnsSysAduPartListUni respuesta = new AnsSysAduPartListUni();;
+		respuesta.setCr("00");
+		respuesta.setDescripcion("Correcto");
+		respuesta.setContenido(repoRecinto.findByUnicos());
+		return respuesta;
 	}
 
 	

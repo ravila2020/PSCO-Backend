@@ -1,7 +1,6 @@
 package mx.com.oneproject.spco.rest;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.com.oneproject.spco.repositorio.IMSysPerfilRepo;
+import mx.com.oneproject.spco.respuesta.AnsSysAduPartListUni;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -30,13 +30,16 @@ public class RestSysPerfilesController {
 	 */	
 
 	@GetMapping
-	public List<String> listar(HttpServletRequest peticion,
+	public AnsSysAduPartListUni listar(HttpServletRequest peticion,
 			@RequestParam(required = false, value = "recinto") String recinto,
             @RequestParam(required = false, value = "empresa") String empresa){
 		BigDecimal recintoBD = BigDecimal.valueOf(Double.valueOf(recinto));
 		BigDecimal empresaBD = BigDecimal.valueOf(Double.valueOf(empresa));
-
-		return perfil.findByER(empresaBD, recintoBD);
+		AnsSysAduPartListUni respuesta = new AnsSysAduPartListUni();;
+		respuesta.setCr("00");
+		respuesta.setDescripcion("Correcto");
+		respuesta.setContenido(perfil.findByER(empresaBD, recintoBD));
+		return respuesta;
 	}
 
 }

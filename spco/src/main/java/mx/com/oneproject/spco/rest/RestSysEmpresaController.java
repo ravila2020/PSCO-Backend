@@ -1,7 +1,5 @@
 package mx.com.oneproject.spco.rest;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.com.oneproject.spco.repositorio.IMSysEmpRepo;
+import mx.com.oneproject.spco.respuesta.AnsSysAduPartListUni;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -28,8 +27,12 @@ public class RestSysEmpresaController {
 	 */	
 
 	@GetMapping
-	public List<String> listar(HttpServletRequest peticion){
-		return empresa.findByUnicos();
+	public AnsSysAduPartListUni listar(HttpServletRequest peticion){
+		AnsSysAduPartListUni respuesta = new AnsSysAduPartListUni();;
+		respuesta.setCr("00");
+		respuesta.setDescripcion("Correcto");
+		respuesta.setContenido(empresa.findByUnicos());
+		return respuesta;
 	}
 
 	
