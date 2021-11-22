@@ -20,6 +20,7 @@ import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.modelo.DetCatAp;
 import mx.com.oneproject.spco.modelo.SysAduFact;
+import mx.com.oneproject.spco.modelo.SysAduFactGB;
 import mx.com.oneproject.spco.modelo.SysAduFactId;
 import mx.com.oneproject.spco.modelo.SysCatProducto;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
@@ -29,6 +30,7 @@ import mx.com.oneproject.spco.repositorio.IMSysCatProductoRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFact;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactCons;
+import mx.com.oneproject.spco.respuesta.AnsSysAduFactCuantos;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactList;
 import mx.com.oneproject.spco.respuesta.SysAduFactPag;
 
@@ -57,9 +59,109 @@ public class RestSysAduFactController {
 	 */	
 
 	@GetMapping
-	public List<SysAduFact> listar(HttpServletRequest peticion){
-		return aduFact.findAll();
+	public AnsSysAduFactCuantos listar(HttpServletRequest peticion){
+		String cliente = "1234567891";
+		String producto = "1234567892";
+		String io = "1";
+		List<Object[]> evaluador;
+		AnsSysAduFactCuantos respuesta = new AnsSysAduFactCuantos();
+		SysAduFactGB elemento = new SysAduFactGB();
+//		List<SysAduFactGB> elementos = new List();
+		
+		respuesta.setCr("00");
+  		respuesta.setDescripcion("Exitoso");
+  		respuesta.setContenido(aduFact.contarPartesEntSal(cliente,producto,io));
+//  		System.out.print("\n\n + RestSysAduFactController elemento: " + respuesta.getContenido().get(0).toString());
+//  		System.out.print("\n\n + RestSysAduFactController elemento: " + respuesta.getContenido().getClass()..get(0));
+//  		elementos = (List<SysAduFactGB>) aduFact.contarPartesEntSal(cliente,io);
+  		evaluador = respuesta.getContenido(); 
+ // 		elemento.getIdCliProv(evaluador.getClass().getFields());
+		return respuesta;
 	}
+
+	/*
+	 * public List<SysAduFact> listar(HttpServletRequest peticion){ return
+	 * aduFact.findAll(); }
+	 */
+	/**
+	 * Esta clase define el método de alta de SysAduFact
+	 * @author: Roberto Avila
+	 * @version: 01/10/2021/A
+	 * @see 
+	 */	
+//	@GetMapping(path = {"/Cuantos"})
+//	public AnsSysAduFactCuantos cuantosHay( HttpServletRequest peticion,
+//			@RequestParam(required = false, value = "parte") String parte,
+//			@RequestParam(required = false, value = "producto") String producto){
+//		
+//									System.out.print("\n\n + RestSysAduFactController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+//									System.out.print("\n\n + RestSysAduFactController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+//		  // Validación de token    	
+//			AnsSysAduFactCuantos respuesta = new AnsSysAduFactCuantos();
+//			SysAduFactId llave = new SysAduFactId();
+//	    	String token = peticion.getHeader("Authorization");
+//	    	String user;
+//	    	Integer resultado = 0;                                                        		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+//			if (token != null) {
+//				user = Jwts.parser()
+//						.setSigningKey("0neProj3ct")
+//						.parseClaimsJws(token.replace("Bearer",  ""))
+//						.getBody()
+//						.getSubject();
+//	                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+//			}	else	{
+//				respuesta.setCr("99");
+//				respuesta.setDescripcion("Petición sin token");		
+//				return respuesta;
+//				}
+//			// parametros empresa y recinto del usuario
+//			SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+//			BigDecimal recinto = usuarioProc.getIdRecinto();
+//			BigDecimal empresa = usuarioProc.getIdEmpresa();
+//			String recintoS = recinto.toString();
+//			String empresaS = empresa.toString();
+//			empresaS = String.format("%04d", empresa.intValue());
+//			recintoS = String.format("%04d", recinto.intValue());
+//			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + " " + empresaS + " " + recintoS + "\n ");
+//							
+//	    	try {
+//		    	//-------------existe el producto?
+//	    		if (aduFact.contarPartes(parte, producto, "1") == null)
+//	    		{
+//				respuesta.setCr("56");
+//				respuesta.setDescripcion("No hay existencias");
+//				respuesta.setContenido(resultado);
+//	    		} else
+//	    		{
+//	    			if (aduFact.contarPartes(parte, producto, "2") == null)
+//	    				{
+//    		    			resultado = aduFact.contarPartes(parte,producto,"1");	    				
+//	    				} else
+//	    				{
+//	    		    		resultado = aduFact.contarPartes(parte,producto,"1") - aduFact.contarPartes(parte,producto,"2");
+//	    				}
+//					respuesta.setCr("00");
+//					respuesta.setDescripcion("Correcto");
+//					respuesta.setContenido(resultado);
+//	    		}
+//	    		
+////	    		if (aduFact.findById(llave).isEmpty()){
+////					SysAduFact facturaProc = aduFact.save(NuevoAduFact);
+////					System.out.print(" + RestSysAduFactController insertar Factura: " + facturaProc.getIdCliProv() + "\n ");
+////					respuesta.setCr("00");
+////					respuesta.setDescripcion("Correcto");
+////					respuesta.setContenido(NuevoAduFact);
+////					return respuesta;
+////				  } else {
+////					respuesta.setCr("83");
+////					respuesta.setDescripcion("Ya existe cliente / parte / factura / IndImpExp");
+//			        return respuesta;
+////			   	  }
+//	    		
+//		    	} catch (Exception ex) {
+//		    		throw new ApiRequestException("Upsi");
+//		    	}
+//	}
 
 	
 	/**

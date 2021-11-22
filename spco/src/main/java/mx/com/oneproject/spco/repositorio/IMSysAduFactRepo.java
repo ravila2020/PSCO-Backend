@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import mx.com.oneproject.spco.modelo.SysAduFact;
+import mx.com.oneproject.spco.modelo.SysAduFactGB;
 import mx.com.oneproject.spco.modelo.SysAduFactId;
 
 public interface IMSysAduFactRepo extends JpaRepository<SysAduFact, SysAduFactId> {
@@ -41,4 +42,13 @@ public interface IMSysAduFactRepo extends JpaRepository<SysAduFact, SysAduFactId
 	@Query("delete  from SysAduFact m  where m.IdCliProv = :cliente and m.numPart = :parte and m.numFact = :factura")
 	int  BorradoByProducto(@Param("cliente") String cliente, @Param("parte") String parte, @Param("factura") String factura);
 
-}
+	@Query("select sum(m.cantidad) from SysAduFact m  where m.numPart = :parte and m.producto = :producto and m.iDImpoEexpo = :indicador")
+	Integer contarPartes(@Param("parte") String parte, @Param("producto") String producto, @Param("indicador") String indicador);
+
+	@Query("select m from SysAduFact m  where m.numPart = :parte and m.producto = :producto and m.iDImpoEexpo = :indicador")
+	SysAduFact contarPartesFis(@Param("parte") String parte, @Param("producto") String producto, @Param("indicador") String indicador);
+	
+	@Query("select m.IdCliProv, m.numPart, m.numPedimentoEntrada, m.producto, m.iDImpoEexpo, sum(m.cantidad) as cantidad from SysAduFact m " +
+		       "where m.IdCliProv = :cliente and m.iDImpoEexpo = :indicador and m.producto = :producto group by m.IdCliProv, m.numPart, m.numPedimentoEntrada, m.producto," + 
+			   " m.iDImpoEexpo ")
+		List<Object[]> contarPartesEntSal(@Param("cliente") String cliente, @Param("producto") String producto, @Param("indicador") String indicador);}
