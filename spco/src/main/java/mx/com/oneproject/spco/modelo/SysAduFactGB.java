@@ -1,6 +1,5 @@
 package mx.com.oneproject.spco.modelo;
 
-
 public class SysAduFactGB {
 
 	private String IdCliProv;
@@ -8,7 +7,7 @@ public class SysAduFactGB {
 	private String numPedimentoEntrada;	
 	private String producto;                                          
 	private String iDImpoEexpo;
-	private Double cantidad;
+ 	private Double cantidad;
 	
 	
 	public String getIdCliProv() {

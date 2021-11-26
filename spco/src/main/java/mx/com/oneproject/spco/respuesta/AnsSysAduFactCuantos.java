@@ -2,13 +2,13 @@ package mx.com.oneproject.spco.respuesta;
 
 import java.util.List;
 
-import mx.com.oneproject.spco.modelo.SysAduFactGB;
+import mx.com.oneproject.spco.modelo.SysAduFact;
 
 public class AnsSysAduFactCuantos {
 
 	private String cr;
 	private String descripcion;
-	private List<Object[]> contenido;
+	private List<SysAduFact> contenido;
 	
 	public String getCr() {
 		return cr;
@@ -22,10 +22,10 @@ public class AnsSysAduFactCuantos {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	public List<Object[]> getContenido() {
+	public List<SysAduFact> getContenido() {
 		return contenido;
 	}
-	public void setContenido(List<Object[]> contenido) {
+	public void setContenido(List<SysAduFact> contenido) {
 		this.contenido = contenido;
 	}
 

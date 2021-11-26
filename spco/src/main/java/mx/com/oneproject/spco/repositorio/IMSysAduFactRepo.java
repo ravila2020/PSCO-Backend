@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import mx.com.oneproject.spco.modelo.SysAduFact;
@@ -51,4 +52,14 @@ public interface IMSysAduFactRepo extends JpaRepository<SysAduFact, SysAduFactId
 	@Query("select m.IdCliProv, m.numPart, m.numPedimentoEntrada, m.producto, m.iDImpoEexpo, sum(m.cantidad) as cantidad from SysAduFact m " +
 		       "where m.IdCliProv = :cliente and m.iDImpoEexpo = :indicador and m.producto = :producto group by m.IdCliProv, m.numPart, m.numPedimentoEntrada, m.producto," + 
 			   " m.iDImpoEexpo ")
-		List<Object[]> contarPartesEntSal(@Param("cliente") String cliente, @Param("producto") String producto, @Param("indicador") String indicador);}
+		List<Object[]> contarPartesEntSal(@Param("cliente") String cliente, @Param("producto") String producto, @Param("indicador") String indicador);
+
+	@Query("select m.IdCliProv, m.numPart, m.numPedimentoEntrada, m.producto, m.iDImpoEexpo from SysAduFact m " +
+		       "where m.IdCliProv = :cliente and m.iDImpoEexpo = :indicador and m.producto = :producto group by m.IdCliProv, m.numPart, m.numPedimentoEntrada, m.producto," + 
+			   " m.iDImpoEexpo ")
+		List<SysAduFactGB> contarPartesEntSal2(@Param("cliente") String cliente, @Param("producto") String producto, @Param("indicador") String indicador);
+
+	@Procedure(procedureName = "ParteCliente")
+    int parteCliente();
+    
+}

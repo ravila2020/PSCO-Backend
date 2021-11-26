@@ -4,11 +4,21 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.NamedStoredProcedureQueries;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 
 @Entity
 @IdClass(SysAduFactId.class)
 @Table(name = "SYS_ADU_FACT3")
+@NamedStoredProcedureQueries({
+@NamedStoredProcedureQuery(name = "ParteCliente",procedureName = "ParteCliente", parameters= 
+{@StoredProcedureParameter(	mode = ParameterMode.IN, name = "cli",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "part",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "ind",type=String.class)})
+})
 public class SysAduFact {
 
 	
