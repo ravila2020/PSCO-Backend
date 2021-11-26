@@ -86,7 +86,7 @@ public class RestSysAduFactController {
 	@GetMapping(path = {"/Cuantos"})
 	public AnsSysAduFactCuantos cuantosHay( HttpServletRequest peticion,
 			@RequestParam(required = false, value = "cli") String cli,
-			@RequestParam(required = false, value = "part") String part){
+			@RequestParam(required = false, value = "prod") String part){
 		
 									System.out.print("\n\n + RestSysAduFactController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
 									System.out.print("\n\n + RestSysAduFactController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
