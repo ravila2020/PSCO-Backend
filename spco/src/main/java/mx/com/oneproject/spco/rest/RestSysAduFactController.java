@@ -62,15 +62,18 @@ public class RestSysAduFactController {
 	 */	
 
 	@GetMapping
-	public AnsSysAduFactCuantos listar(HttpServletRequest peticion){
-		String cli = "1234567891";
-		String part = "1234567891";
-		String ind = "1";
-		AnsSysAduFactCuantos respuesta = new AnsSysAduFactCuantos();
-		respuesta.setCr("00");
-  		respuesta.setDescripcion("Exitoso");
-  		respuesta.setContenido(sysAFServ.getRemanente(cli,part,ind));
-		return respuesta;
+//	public AnsSysAduFactCuantos listar(HttpServletRequest peticion){
+//		String cli = "1234567891";
+//		String part = "1234567891";
+//		String ind = "1";
+//		AnsSysAduFactCuantos respuesta = new AnsSysAduFactCuantos();
+//		respuesta.setCr("00");
+//  		respuesta.setDescripcion("Exitoso");
+//  		respuesta.setContenido(sysAFServ.getRemanente(cli,part,ind));
+//		return respuesta;
+    public List<SysAduFact> listar(HttpServletRequest peticion){ 
+		return aduFact.findAll(); 
+
 	}
 
 	/*
