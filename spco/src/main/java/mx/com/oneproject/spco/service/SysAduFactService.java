@@ -29,4 +29,13 @@ public class SysAduFactService {
 				.getResultList();
 	}
 
+	public List<SysAduFact> getRemanenteInv(String cli, String part, String ind)
+	{
+		return em.createNamedStoredProcedureQuery("ParteClienteInv")
+				.setParameter("cli",cli)
+				.setParameter("part",part)
+				.setParameter("ind", ind)
+				.getResultList();
+	}
+
 }

@@ -61,5 +61,8 @@ public interface IMSysAduFactRepo extends JpaRepository<SysAduFact, SysAduFactId
 
 	@Procedure(procedureName = "ParteCliente")
     int parteCliente();
-    
+
+	@Procedure(procedureName = "ParteClienteInv")
+    int parteClienteInv();
+
 }
