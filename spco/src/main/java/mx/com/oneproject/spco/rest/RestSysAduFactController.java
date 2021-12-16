@@ -191,6 +191,66 @@ public class RestSysAduFactController {
 		    		throw new ApiRequestException("Upsi");
 		    	}
 	}
+
+	/**
+	 * Esta clase define el método de alta de SysAduFact
+	 * @author: Roberto Avila
+	 * @version: 01/10/2021/A
+	 * @see 
+	 */	
+	@GetMapping(path = {"/Traspaso"})
+	public AnsSysAduFactCuantos traspaso( HttpServletRequest peticion,
+//			@RequestParam(required = false, value = "empresa") String empresa,
+//			@RequestParam(required = false, value = "recinto") String recinto,
+			@RequestParam(required = false, value = "cli") String cli,
+			@RequestParam(required = false, value = "prod") String prod,
+			@RequestParam(required = false, value = "cantidad") String cantidad,
+			@RequestParam(required = false, value = "recintoD") String recintoD,
+			@RequestParam(required = false, value = "cliD") String cliD,
+			@RequestParam(required = false, value = "numFactN") String numFactN){
+		
+									System.out.print("\n\n + RestSysAduFactController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysAduFactController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+		  // Validación de token    	
+			AnsSysAduFactCuantos respuesta = new AnsSysAduFactCuantos();
+			SysAduFactId llave = new SysAduFactId();
+	    	String token = peticion.getHeader("Authorization");
+	    	String user;
+	    	Integer resultado = 0;
+	    	String ind = "1";
+	    	System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+			if (token != null) {
+				user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+			// parametros empresa y recinto del usuario
+			SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+			BigDecimal recinto = usuarioProc.getIdRecinto();
+			BigDecimal empresa = usuarioProc.getIdEmpresa();
+			String recintoS = recinto.toString();
+			String empresaS = empresa.toString();
+			empresaS = String.format("%04d", empresa.intValue());
+			recintoS = String.format("%04d", recinto.intValue());
+			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + " " + empresaS + " " + recintoS + "\n ");
+							
+	    	try {
+		    	//-------------existe el producto?		
+	    		respuesta.setCr("00");
+	      		respuesta.setDescripcion("Exitoso");
+	      		respuesta.setContenido(sysAFServ.getTraspasoCliente(empresaS, recintoS, cli, prod, cantidad, recintoD, cliD, numFactN));
+			        return respuesta;
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
 	
 	/**
 	 * Esta clase define el método de alta de SysAduFact

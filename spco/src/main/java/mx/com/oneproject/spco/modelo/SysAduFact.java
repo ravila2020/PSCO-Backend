@@ -21,7 +21,16 @@ import javax.persistence.Table;
 @NamedStoredProcedureQuery(name = "ParteClienteInv",procedureName = "ParteClienteInv", parameters= 
 {@StoredProcedureParameter(	mode = ParameterMode.IN, name = "cli",type=String.class), 
  @StoredProcedureParameter(mode = ParameterMode.IN, name = "part",type=String.class), 
- @StoredProcedureParameter(mode = ParameterMode.IN, name = "ind",type=String.class)})
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "ind",type=String.class)}),
+@NamedStoredProcedureQuery(name = "TraspasoCliente",procedureName = "TraspasoCliente", parameters= 
+{@StoredProcedureParameter(	mode = ParameterMode.IN, name = "empresa",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "recinto",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "cli",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "prod",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "cantidad",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "recintoD",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "cliD",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "numFactN",type=String.class)})
 })
 public class SysAduFact {
 
