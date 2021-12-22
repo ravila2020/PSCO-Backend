@@ -27,7 +27,7 @@ import javax.persistence.Table;
  @StoredProcedureParameter(mode = ParameterMode.IN, name = "recinto",type=String.class), 
  @StoredProcedureParameter(mode = ParameterMode.IN, name = "cli",type=String.class), 
  @StoredProcedureParameter(mode = ParameterMode.IN, name = "prod",type=String.class), 
- @StoredProcedureParameter(mode = ParameterMode.IN, name = "cantidad",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "cantidad",type=Integer.class), 
  @StoredProcedureParameter(mode = ParameterMode.IN, name = "recintoD",type=String.class), 
  @StoredProcedureParameter(mode = ParameterMode.IN, name = "cliD",type=String.class), 
  @StoredProcedureParameter(mode = ParameterMode.IN, name = "numFactN",type=String.class)})

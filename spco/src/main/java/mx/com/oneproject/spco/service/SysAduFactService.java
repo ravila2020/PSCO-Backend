@@ -39,25 +39,9 @@ public class SysAduFactService {
 				.getResultList();
 	}
 
-	public List<SysAduFact> getTraspasoCliente(String empresa, String recinto, String cli, String prod, String cantidad, String recintoD, String cliD, String numFactN)
+	public List<SysAduFact> getTraspasoCliente(String empresa, String recinto, String cli, String prod, Integer cantidad, String recintoD, String cliD, String numFactN)
 	{
-//		ArrayList<SysAduFact> temporal = new ArrayList();
-//		List<SysAduFact> temporal =  em.createNamedStoredProcedureQuery("TraspasoCliente")
-//				.setParameter("empresa", empresa)
-//				.setParameter("recinto", recinto)
-//				.setParameter("cli",cli)
-//				.setParameter("prod",prod)
-//				.setParameter("cantidad", cantidad)
-//				.setParameter("recintoD", recintoD)
-//				.setParameter("cliD", cliD)
-//				.setParameter("numFactN", numFactN)
-//				.getResultList();
-//		if( em.createNamedStoredProcedureQuery("TraspasoCliente").hasMoreResults())
-//		{
-//			System.out.print("\n\n + SysAduFactService Si hay mas datos \n\n ");
-//		}
-		
-		return (em.createNamedStoredProcedureQuery("TraspasoCliente")
+		return em.createNamedStoredProcedureQuery("TraspasoCliente")
 		.setParameter("empresa", empresa)
 		.setParameter("recinto", recinto)
 		.setParameter("cli",cli)
@@ -66,7 +50,7 @@ public class SysAduFactService {
 		.setParameter("recintoD", recintoD)
 		.setParameter("cliD", cliD)
 		.setParameter("numFactN", numFactN)
-		.getResultList());
+		.getResultList();
 
 	}
 	

@@ -127,6 +127,9 @@ public class RestSysAduFactController {
 		    	//-------------existe el producto?		
 	    		respuesta.setCr("00");
 	      		respuesta.setDescripcion("Exitoso");
+	      		System.out.print(" + RestSysAduFactController traspaso - cli : " + cli + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - part : " + part + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - ind : " + ind + "\n ");	      		
 	      		respuesta.setContenido(sysAFServ.getRemanente(cli,part,ind));
 			        return respuesta;
 		    	} catch (Exception ex) {
@@ -185,6 +188,9 @@ public class RestSysAduFactController {
 		    	//-------------existe el producto?		
 	    		respuesta.setCr("00");
 	      		respuesta.setDescripcion("Exitoso");
+	      		System.out.print(" + RestSysAduFactController traspaso - cli : " + cli + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - part : " + part + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - ind : " + ind + "\n ");	      		
 	      		respuesta.setContenido(sysAFServ.getRemanenteInv(cli,part,ind));
 			        return respuesta;
 		    	} catch (Exception ex) {
@@ -204,7 +210,7 @@ public class RestSysAduFactController {
 //			@RequestParam(required = false, value = "recinto") String recinto,
 			@RequestParam(required = false, value = "cli") String cli,
 			@RequestParam(required = false, value = "prod") String prod,
-			@RequestParam(required = false, value = "cantidad") String cantidad,
+			@RequestParam(required = false, value = "cantidad") Integer cantidad,
 			@RequestParam(required = false, value = "recintoD") String recintoD,
 			@RequestParam(required = false, value = "cliD") String cliD,
 			@RequestParam(required = false, value = "numFactN") String numFactN){
@@ -245,6 +251,14 @@ public class RestSysAduFactController {
 		    	//-------------existe el producto?		
 	    		respuesta.setCr("00");
 	      		respuesta.setDescripcion("Exitoso");
+	      		System.out.print("\n\n + RestSysAduFactController traspaso - empresaS : " + empresaS + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - recintoS : " + recintoS + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - cli : " + cli + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - prod : " + prod + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - cantidad : " + cantidad + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - recintoD : " + recintoD + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - cliD : " + cliD + "\n ");
+	      		System.out.print(" + RestSysAduFactController traspaso - numFactN : " + numFactN + "\n ");
 	      		respuesta.setContenido(sysAFServ.getTraspasoCliente(empresaS, recintoS, cli, prod, cantidad, recintoD, cliD, numFactN));
 			        return respuesta;
 		    	} catch (Exception ex) {
