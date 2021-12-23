@@ -21,16 +21,19 @@ import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.modelo.DetCatAp;
 import mx.com.oneproject.spco.modelo.SysAduFact;
 import mx.com.oneproject.spco.modelo.SysAduFactId;
+import mx.com.oneproject.spco.modelo.SysAduTrans;
 import mx.com.oneproject.spco.modelo.SysCatProducto;
 import mx.com.oneproject.spco.modelo.SysUsuarios;
 import mx.com.oneproject.spco.repositorio.IMDetCatApRepo;
 import mx.com.oneproject.spco.repositorio.IMSysAduFactRepo;
+import mx.com.oneproject.spco.repositorio.IMSysAduTransRepo;
 import mx.com.oneproject.spco.repositorio.IMSysCatProductoRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFact;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactCons;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactCuantos;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactList;
+import mx.com.oneproject.spco.respuesta.AnsSysAduTrans;
 import mx.com.oneproject.spco.respuesta.SysAduFactPag;
 import mx.com.oneproject.spco.service.SysAduFactService;
 
@@ -41,7 +44,10 @@ public class RestSysAduFactController {
 	
 	@Autowired
 	private IMSysAduFactRepo aduFact;
-	
+
+	@Autowired
+	private IMSysAduTransRepo aduTrans;
+
 	@Autowired
 	private IMSysUserRepo sysUser;
 
@@ -71,11 +77,68 @@ public class RestSysAduFactController {
 //  		respuesta.setDescripcion("Exitoso");
 //  		respuesta.setContenido(sysAFServ.getRemanente(cli,part,ind));
 //		return respuesta;
-    public List<SysAduFact> listar(HttpServletRequest peticion){ 
-		return aduFact.findAll(); 
+	
+	
+    public List<SysAduTrans> listar(HttpServletRequest peticion){ 
+		return aduTrans.findAll(); 
 
 	}
 
+	/**
+	 * Esta clase define el método de consulta de traspasos 
+	 * @author: Roberto Avila
+	 * @version: 01/10/2021/A
+	 * @see 
+	 */	
+	@GetMapping(path = {"/Traspasos"})
+	public AnsSysAduTrans Traspasos( HttpServletRequest peticion,
+			@RequestParam(required = false, value = "cli") String cli)
+			{
+									System.out.print("\n\n + RestSysAduFactController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysAduFactController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+		  // Validación de token    	
+			AnsSysAduTrans respuesta = new AnsSysAduTrans();
+			SysAduFactId llave = new SysAduFactId();
+	    	String token = peticion.getHeader("Authorization");
+	    	String user;
+	    	Integer resultado = 0;
+	    	String ind = "1";
+	    	System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+			if (token != null) {
+				user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+			// parametros empresa y recinto del usuario
+			SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+			BigDecimal recinto = usuarioProc.getIdRecinto();
+			BigDecimal empresa = usuarioProc.getIdEmpresa();
+			String recintoS = recinto.toString();
+			String empresaS = empresa.toString();
+			empresaS = String.format("%04d", empresa.intValue());
+			recintoS = String.format("%04d", recinto.intValue());
+			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + " " + empresaS + " " + recintoS + "\n ");
+							
+	    	try {
+		    	//-------------existe el producto?		
+	    		respuesta.setCr("00");
+	      		respuesta.setDescripcion("Exitoso");
+	      		System.out.print(" + RestSysAduFactController traspaso - cli : " + cli + "\n ");
+	      		respuesta.setContenido(aduTrans.BuscarByCliente(cli));
+			        return respuesta;
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
+	
 	/*
 	 * public List<SysAduFact> listar(HttpServletRequest peticion){ return
 	 * aduFact.findAll(); }
