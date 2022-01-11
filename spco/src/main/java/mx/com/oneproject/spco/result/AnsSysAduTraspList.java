@@ -1,14 +1,12 @@
-package mx.com.oneproject.spco.respuesta;
+package mx.com.oneproject.spco.result;
 
-import java.util.List;
+import mx.com.oneproject.spco.respuesta.SysAduTrasPag;
 
-import mx.com.oneproject.spco.modelo.SysAduTrasp;
-
-public class AnsSysAduTrans {
+public class AnsSysAduTraspList {
 
 	private String cr;
 	private String descripcion;
-	private List<SysAduTrasp> contenido;
+	private SysAduTrasPag contenido;
 	
 	public String getCr() {
 		return cr;
@@ -22,13 +20,14 @@ public class AnsSysAduTrans {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	public List<SysAduTrasp> getContenido() {
+	public SysAduTrasPag getContenido() {
 		return contenido;
 	}
-	public void setContenido(List<SysAduTrasp> contenido) {
+	public void setContenido(SysAduTrasPag contenido) {
 		this.contenido = contenido;
 	}
 	
-
+	
+	
 	
 }

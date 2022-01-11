@@ -1,12 +1,14 @@
 package mx.com.oneproject.spco.repositorio;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import mx.com.oneproject.spco.modelo.SysAduFact;
 import mx.com.oneproject.spco.modelo.SysAduFactGB;
@@ -68,5 +70,20 @@ public interface IMSysAduFactRepo extends JpaRepository<SysAduFact, SysAduFactId
 	@Procedure(procedureName = "TraspasoCliente")
     int traspasoCliente();
 	
+	@Procedure(procedureName = "ParteClienteInvTot")
+    int parteClienteInvTot();
+
+	
+	@Query("select m from SysAduFact m  where m.IdCliProv = :cliente and m.producto = :producto and m.numFact = :factura and m.empresa = :emp and m.recinto = :rec")
+	Optional<SysAduFact>  BuscarByLlaveCPF(@Param("cliente") String cliente, @Param("producto") String producto, @Param("factura") String factura, @Param("emp") String emp, @Param("rec") String rec);
+
+	@Query("select count(*) from SysAduFact m  where m.IdCliProv = :cliente and m.producto = :producto and m.numFact = :factura and m.empresa = :emp and m.recinto = :rec")
+	Integer ContarByLlaveCPF(@Param("cliente") String cliente, @Param("producto") String producto, @Param("factura") String factura, @Param("emp") String emp, @Param("rec") String rec);
+
+	@Transactional
+	@Modifying
+	@Query("delete from SysAduFact m  where m.IdCliProv = :cliente and m.producto = :producto and m.numFact = :factura and m.empresa = :emp and m.recinto = :rec")
+	int BorradoByLlaveCPF(@Param("cliente") String cliente, @Param("producto") String producto, @Param("factura") String factura, @Param("emp") String emp, @Param("rec") String rec);
+
 
 }

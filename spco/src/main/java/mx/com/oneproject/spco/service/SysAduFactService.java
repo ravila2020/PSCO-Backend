@@ -39,6 +39,15 @@ public class SysAduFactService {
 				.getResultList();
 	}
 
+	public List<SysAduFact> getRemanenteInvTot(String cli, String part, String ind)
+	{
+		return em.createNamedStoredProcedureQuery("ParteClienteInvTot")
+				.setParameter("cli",cli)
+				.setParameter("part",part)
+				.setParameter("ind", ind)
+				.getResultList();
+	}
+
 	public List<SysAduFact> getTraspasoCliente(String empresa, String recinto, String cli, String prod, Integer cantidad, String recintoD, String cliD, String numFactN)
 	{
 		return em.createNamedStoredProcedureQuery("TraspasoCliente")

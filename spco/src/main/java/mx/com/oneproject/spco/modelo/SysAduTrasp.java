@@ -7,9 +7,9 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
-@IdClass(SysAduTransId.class)
+@IdClass(SysAduTraspId.class)
 @Table(name = "SYS_ADU_TRANS")
-public class SysAduTrans {
+public class SysAduTrasp {
 
 	@Id
 	@Column(name = "Empresa", nullable = false, length = 4)          

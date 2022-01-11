@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Id;
 
-public class SysAduTransId implements Serializable{
+public class SysAduTraspId implements Serializable{
 
 	private String empresa;                                           
 	private String recinto;                                           

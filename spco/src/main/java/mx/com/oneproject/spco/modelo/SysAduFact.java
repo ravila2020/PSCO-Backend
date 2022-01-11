@@ -22,6 +22,10 @@ import javax.persistence.Table;
 {@StoredProcedureParameter(	mode = ParameterMode.IN, name = "cli",type=String.class), 
  @StoredProcedureParameter(mode = ParameterMode.IN, name = "part",type=String.class), 
  @StoredProcedureParameter(mode = ParameterMode.IN, name = "ind",type=String.class)}),
+@NamedStoredProcedureQuery(name = "ParteClienteInvTot",procedureName = "ParteClienteInvTot", parameters= 
+{@StoredProcedureParameter(	mode = ParameterMode.IN, name = "cli",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "part",type=String.class), 
+ @StoredProcedureParameter(mode = ParameterMode.IN, name = "ind",type=String.class)}),
 @NamedStoredProcedureQuery(name = "TraspasoCliente",procedureName = "TraspasoCliente", parameters= 
 {@StoredProcedureParameter(	mode = ParameterMode.IN, name = "empresa",type=String.class), 
  @StoredProcedureParameter(mode = ParameterMode.IN, name = "recinto",type=String.class), 
