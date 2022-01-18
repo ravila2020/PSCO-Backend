@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @IdClass(SysAduTraspId.class)
-@Table(name = "SYS_ADU_TRANS")
+@Table(name = "SYS_ADU_TRASP")
 public class SysAduTrasp {
 
 	@Id
@@ -33,10 +33,16 @@ public class SysAduTrasp {
 	private String numPedimentoEntrada;	
 	@Column(name = "Estatus", nullable = false, length = 2)     
 	private String estatus;
+	@Column(name = "Producto", nullable = false, length = 10)      
+	private String producto;                                          
+	@Column(name = "Cantidad", nullable = false)          
+	private Float cantidad;                                          
+	@Column(name = "Id_Cli_Prov_Dest", nullable = false, length = 10)
+	private String idCliProvDest;
 	@Column(name = "Fecha_Alta", nullable = false, length = 10)       
 	private String fechaAlta;                                          
 	@Column(name = "Fecha_Mod", nullable = false, length = 10)       
-	private String fechaMod;                                          
+	private String fechaMod; 
 	@Column(name = "HORA", nullable = false, length = 8)             
 	private String hora;                                              
 	@Column(name = "USER_Mod", nullable = false, length = 8)     
@@ -45,6 +51,25 @@ public class SysAduTrasp {
 	private String entSal;
 	@Column(name = "Num_Fact_Ent", nullable = false, length = 15)
 	private String numFactEnt;
+	
+	public String getProducto() {
+		return producto;
+	}
+	public void setProducto(String producto) {
+		this.producto = producto;
+	}
+	public Float getCantidad() {
+		return cantidad;
+	}
+	public void setCantidad(Float cantidad) {
+		this.cantidad = cantidad;
+	}
+	public String getIdCliProvDest() {
+		return idCliProvDest;
+	}
+	public void setIdCliProvDest(String idCliProvDest) {
+		this.idCliProvDest = idCliProvDest;
+	}
 	public String getEmpresa() {
 		return empresa;
 	}
