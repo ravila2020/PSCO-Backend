@@ -85,5 +85,19 @@ public interface IMSysAduFactRepo extends JpaRepository<SysAduFact, SysAduFactId
 	@Query("delete from SysAduFact m  where m.IdCliProv = :cliente and m.producto = :producto and m.numFact = :factura and m.empresa = :emp and m.recinto = :rec")
 	int BorradoByLlaveCPF(@Param("cliente") String cliente, @Param("producto") String producto, @Param("factura") String factura, @Param("emp") String emp, @Param("rec") String rec);
 
+	@Query("select m from SysAduFact m  where m.IdCliProv = :cliente and m.numPart = :parte ")
+	List<SysAduFact> BuscarByCliFact(@Param("cliente") String cliente, @Param("parte") String parte);
 
+	@Query("select m from SysAduFact m  where m.IdCliProv = :cliente and m.numPart = :parte and m.empresa = :emp and m.recinto = :rec and m.iDImpoEexpo = '2' and entSal = 'S' ")
+	List<SysAduFact> BuscarByCliFactER(@Param("cliente") String cliente, @Param("parte") String parte, @Param("emp") String emp, @Param("rec") String rec);
+
+	@Query("select m from SysAduFact m  where m.IdCliProv = :cliente and m.empresa = :emp and m.recinto = :rec and m.iDImpoEexpo = '2' and entSal = 'S' ")
+	List<SysAduFact> BuscarByCliER(@Param("cliente") String cliente,  @Param("emp") String emp, @Param("rec") String rec);
+
+	@Query("select m.numPart from SysAduFact m  where m.IdCliProv = :cliente and m.empresa = :emp and m.recinto = :rec and m.iDImpoEexpo = '2' and entSal = 'S' ")
+	List<String> BuscarByCliERP(@Param("cliente") String cliente,  @Param("emp") String emp, @Param("rec") String rec);
+
+	@Query("select m.numFact from SysAduFact m  where m.IdCliProv = :cliente and m.empresa = :emp and m.recinto = :rec and m.iDImpoEexpo = '2' and entSal = 'S' ")
+	List<String> BuscarByCliERF(@Param("cliente") String cliente,  @Param("emp") String emp, @Param("rec") String rec);
+	
 }

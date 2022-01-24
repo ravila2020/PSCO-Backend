@@ -30,6 +30,8 @@ import mx.com.oneproject.spco.repositorio.IMSysAduTransRepo;
 import mx.com.oneproject.spco.repositorio.IMSysCatProductoRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFact;
+import mx.com.oneproject.spco.respuesta.AnsSysAduFactCListaClieProd;
+import mx.com.oneproject.spco.respuesta.AnsSysAduFactCListaString;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactCons;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactCuantos;
 import mx.com.oneproject.spco.respuesta.AnsSysAduFactList;
@@ -239,7 +241,7 @@ public class RestSysAduFactController {
 	 * aduFact.findAll(); }
 	 */
 	/**
-	 * Esta clase define el método de alta de SysAduFact
+	 * Esta clase define el método de consulta de SysAduFact
 	 * @author: Roberto Avila
 	 * @version: 01/10/2021/A
 	 * @see 
@@ -300,7 +302,7 @@ public class RestSysAduFactController {
 	 * aduFact.findAll(); }
 	 */
 	/**
-	 * Esta clase define el método de alta de SysAduFact
+	 * Esta clase define el método de consulta de SysAduFact
 	 * @author: Roberto Avila
 	 * @version: 01/10/2021/A
 	 * @see 
@@ -357,7 +359,7 @@ public class RestSysAduFactController {
 	}
 
 	/**
-	 * Esta clase define el método de alta de SysAduFact
+	 * Esta clase define el método de consulta de  SysAduFact
 	 * @author: Roberto Avila
 	 * @version: 01/10/2021/A
 	 * @see 
@@ -415,7 +417,7 @@ public class RestSysAduFactController {
 
 
 	/**
-	 * Esta clase define el método de alta de SysAduFact
+	 * Esta clase define el método de alta de traspaso de SysAduFact
 	 * @author: Roberto Avila
 	 * @version: 01/10/2021/A
 	 * @see 
@@ -884,6 +886,116 @@ public class RestSysAduFactController {
     }
 
 	/**
+	 * Esta clase define el método de consulta de partes del cliente
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+    @GetMapping(path = {"/FactCliPart"})
+    public AnsSysAduFactCListaClieProd ConsultaCliPart(
+            @RequestParam(required = false, value = "cliente") String cliente, 
+            @RequestParam(required = false, value = "parte") String parte,  
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysAduFactCListaClieProd respuesta = new AnsSysAduFactCListaClieProd();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+	// Preparación de la paginación.
+	//	SysAduFact SysAduFactCero = new SysAduFact();
+    // obtener el total de sys_usuarios
+		List<SysAduFact> SysAduFactCero = aduFact.BuscarByCliFactER(cliente,parte,empresaS,recintoS);
+		if(SysAduFactCero.isEmpty()) {
+			respuesta.setContenido(SysAduFactCero);
+			respuesta.setCr("97");
+			respuesta.setDescripcion("No existe cliente / parte / empresa / recinto");		
+		}
+		else {
+			 respuesta.setContenido(SysAduFactCero);
+			 respuesta.setCr("00");
+			 respuesta.setDescripcion("Correcto");		
+		}
+
+        return respuesta;
+    }
+
+
+	/**
+	 * Esta clase define el método de consulta de partes del cliente
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+    @GetMapping(path = {"/FactCli"})
+    public AnsSysAduFactCListaClieProd ConsultaCli(
+            @RequestParam(required = false, value = "cliente") String cliente, 
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysAduFactCListaClieProd respuesta = new AnsSysAduFactCListaClieProd();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+	// Preparación de la paginación.
+	//	SysAduFact SysAduFactCero = new SysAduFact();
+    // obtener el total de sys_usuarios
+		List<SysAduFact> SysAduFactCero = aduFact.BuscarByCliER(cliente,empresaS,recintoS);
+		if(SysAduFactCero.isEmpty()) {
+			respuesta.setContenido(SysAduFactCero);
+			respuesta.setCr("97");
+			respuesta.setDescripcion("No existe cliente / parte / empresa / recinto");		
+		}
+		else {
+			 respuesta.setContenido(SysAduFactCero);
+			 respuesta.setCr("00");
+			 respuesta.setDescripcion("Correcto");		
+		}
+
+        return respuesta;
+    }
+
+
+    
+    /**
 	 * Esta clase define el método de borrado de partes del cliente
 	 * @author: Roberto Avila
 	 * @version: 21/09/2021/A
@@ -1005,5 +1117,111 @@ public class RestSysAduFactController {
         return respuesta;
     }
 
+	/**
+	 * Esta clase define el método de consulta de partes del cliente
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+    @GetMapping(path = {"/FactCliUNI"})
+    public AnsSysAduFactCListaString ConsultaCliPart(
+            @RequestParam(required = false, value = "cliente") String cliente, 
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysAduFactCListaString respuesta = new AnsSysAduFactCListaString();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+	// Preparación de la paginación.
+	//	SysAduFact SysAduFactCero = new SysAduFact();
+    // obtener el total de sys_usuarios
+		List<String> SysAduFactCero = aduFact.BuscarByCliERP(cliente,empresaS,recintoS);
+		if(SysAduFactCero.isEmpty()) {
+			respuesta.setContenido(SysAduFactCero);
+			respuesta.setCr("97");
+			respuesta.setDescripcion("No existe cliente / empresa / recinto");		
+		}
+		else {
+			 respuesta.setContenido(SysAduFactCero);
+			 respuesta.setCr("00");
+			 respuesta.setDescripcion("Correcto");		
+		}
+
+        return respuesta;
+    }
+
+	/**
+	 * Esta clase define el método de consulta de facturas del cliente
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+    @GetMapping(path = {"/FactCliFUNI"})
+    public AnsSysAduFactCListaString ConsultaCliFact(
+            @RequestParam(required = false, value = "cliente") String cliente, 
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysAduFactCListaString respuesta = new AnsSysAduFactCListaString();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+	// Preparación de la paginación.
+	//	SysAduFact SysAduFactCero = new SysAduFact();
+    // obtener el total de sys_usuarios
+		List<String> SysAduFactCero = aduFact.BuscarByCliERF(cliente,empresaS,recintoS);
+		if(SysAduFactCero.isEmpty()) {
+			respuesta.setContenido(SysAduFactCero);
+			respuesta.setCr("97");
+			respuesta.setDescripcion("No existe cliente / empresa / recinto");		
+		}
+		else {
+			 respuesta.setContenido(SysAduFactCero);
+			 respuesta.setCr("00");
+			 respuesta.setDescripcion("Correcto");		
+		}
+
+        return respuesta;
+    }
+    
     
 }
