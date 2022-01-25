@@ -94,10 +94,10 @@ public interface IMSysAduFactRepo extends JpaRepository<SysAduFact, SysAduFactId
 	@Query("select m from SysAduFact m  where m.IdCliProv = :cliente and m.empresa = :emp and m.recinto = :rec and m.iDImpoEexpo = '2' and entSal = 'S' ")
 	List<SysAduFact> BuscarByCliER(@Param("cliente") String cliente,  @Param("emp") String emp, @Param("rec") String rec);
 
-	@Query("select m.numPart from SysAduFact m  where m.IdCliProv = :cliente and m.empresa = :emp and m.recinto = :rec and m.iDImpoEexpo = '2' and entSal = 'S' ")
+	@Query("select distinct(m.numPart) from SysAduFact m  where m.IdCliProv = :cliente and m.empresa = :emp and m.recinto = :rec and m.iDImpoEexpo = '2' and entSal = 'S' ")
 	List<String> BuscarByCliERP(@Param("cliente") String cliente,  @Param("emp") String emp, @Param("rec") String rec);
 
-	@Query("select m.numFact from SysAduFact m  where m.IdCliProv = :cliente and m.empresa = :emp and m.recinto = :rec and m.iDImpoEexpo = '2' and entSal = 'S' ")
+	@Query("select distinct(m.numFact) from SysAduFact m  where m.IdCliProv = :cliente and m.empresa = :emp and m.recinto = :rec and m.iDImpoEexpo = '2' and entSal = 'S' ")
 	List<String> BuscarByCliERF(@Param("cliente") String cliente,  @Param("emp") String emp, @Param("rec") String rec);
 	
 }
