@@ -1,5 +1,6 @@
 package mx.com.oneproject.spco.rest;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,13 +13,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Jwts;
 import mx.com.oneproject.spco.exception.ApiRequestException;
 import mx.com.oneproject.spco.modelo.SysAduTrasp;
 import mx.com.oneproject.spco.modelo.SysAduTraspId;
+import mx.com.oneproject.spco.modelo.SysUsuarios;
 import mx.com.oneproject.spco.repositorio.IMSysAduTransRepo;
+import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
 import mx.com.oneproject.spco.respuesta.AnsSysAduTrasp;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -28,6 +32,9 @@ public class RestSysAduTraspController {
 
 	@Autowired
 	private IMSysAduTransRepo aduTrasp;
+
+	@Autowired
+	private IMSysUserRepo sysUser;
 
 	
 	/**
@@ -42,6 +49,70 @@ public class RestSysAduTraspController {
 		return aduTrasp.findAll(); 
 
 	}
+
+	/**
+	 * Esta clase define el método de consulta de registro de traspasos por llave
+	 * @author: Roberto Avila
+	 * @version: 01/01/2022/A
+	 * @see 
+	 */	
+
+	@GetMapping	(path = {"/TraspUnico"})
+    public  AnsSysAduTrasp listarLlave(
+    		@RequestParam(required = false, value = "cliente") String cliente,
+            @RequestParam(required = false, value = "parte") String parte,
+            @RequestParam(required = false, value = "factura") String factura,
+            @RequestParam(required = false, value = "pedimento") String pedimento,
+            HttpServletRequest peticion){ 
+		
+    	String user;
+    	AnsSysAduTrasp respuesta = new AnsSysAduTrasp();
+    	SysAduTrasp cuerpo = new SysAduTrasp();
+    	SysAduTraspId llave = new SysAduTraspId();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduPartController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduPartController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+		
+		llave.setEmpresa(empresaS);
+		llave.setRecinto(recintoS);
+		llave.setIdCliProv(cliente);
+		llave.setNumPart(parte);
+		llave.setNumFact(factura);
+		llave.setNumPedimentoEntrada(pedimento);
+		
+		cuerpo = aduTrasp.BuscarByLlave(cliente, parte, factura, pedimento, empresaS, recintoS);
+		if(cuerpo == null) {
+			respuesta.setDescripcion("Nok");
+			respuesta.setCr("99");
+		} else
+		{
+			respuesta.setContenido(cuerpo);
+			respuesta.setDescripcion("Ok");
+			respuesta.setCr("00");			
+		}
+		return respuesta; 
+
+	}
+
 
 	/**
 	 * Esta clase define el método de alta de SysAduTrasp
