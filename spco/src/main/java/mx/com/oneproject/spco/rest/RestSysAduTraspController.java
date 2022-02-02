@@ -329,4 +329,73 @@ public class RestSysAduTraspController {
 		    	}
 	}
 
+	/**
+	 * Esta clase define el método de borrado de SysAduTrasp
+	 * @author: Roberto Avila
+	 * @version: 01/01/2022/A
+	 * @see 
+	 */	
+	@DeleteMapping(path = {"/TraspBorrar"})
+	public AnsSysAduTrasp borradoSysAduTrasp(
+    		@RequestParam(required = false, value = "cliente") String cliente,
+            @RequestParam(required = false, value = "parte") String parte,
+            @RequestParam(required = false, value = "factura") String factura,
+            @RequestParam(required = false, value = "pedimento") String pedimento,
+            HttpServletRequest peticion){
+		
+									System.out.print("\n\n + RestSysAduTraspController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
+									System.out.print("\n\n + RestSysAduTraspController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
+		  // Validación de token    	
+			AnsSysAduTrasp respuesta = new AnsSysAduTrasp();
+			SysAduTraspId llave = new SysAduTraspId();
+	    	String token = peticion.getHeader("Authorization");
+	    	String user;                                                         		System.out.print("\n\n + RestSysAduTraspController token: " + token + "\n ");
+			if (token != null) {
+				 user = Jwts.parser()
+						.setSigningKey("0neProj3ct")
+						.parseClaimsJws(token.replace("Bearer",  ""))
+						.getBody()
+						.getSubject();
+	                                                            			System.out.print("\n\n + RestSysAduTraspController Usuario: " + user + "\n ");
+			}	else	{
+				respuesta.setCr("99");
+				respuesta.setDescripcion("Petición sin token");		
+				return respuesta;
+				}
+			// parametros empresa y recinto del usuario
+			SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+			BigDecimal recinto = usuarioProc.getIdRecinto();
+			BigDecimal empresa = usuarioProc.getIdEmpresa();
+			String recintoS = recinto.toString();
+			String empresaS = empresa.toString();
+			empresaS = String.format("%04d", empresa.intValue());
+			recintoS = String.format("%04d", recinto.intValue());
+			System.out.print("\n\n + RestSysAduTraspController Usuario: " + user + " empresaS: " + empresaS + " recintoS:  " + recintoS + "\n ");
+			
+							
+	    	try {
+	    		
+	    		llave.setEmpresa(empresaS);
+	    		llave.setRecinto(recintoS);
+	    		llave.setIdCliProv(cliente);
+	    		llave.setNumPart(parte);
+	    		llave.setNumFact(factura);
+	    		llave.setNumPedimentoEntrada(pedimento);
+				if (aduTrasp.findById(llave).isPresent()){
+		    	//-------------
+					aduTrasp.deleteById(llave);
+					respuesta.setCr("00");
+					respuesta.setDescripcion("Correcto");
+		//			respuesta.setContenido(AduTrasp);
+					return respuesta;
+				  } else {
+					respuesta.setCr("89");
+					respuesta.setDescripcion("No existe Empresa / Recinto / cliente / parte / factura / IndImpExp");
+			        return respuesta;
+			   	  }
+		    	} catch (Exception ex) {
+		    		throw new ApiRequestException("Upsi");
+		    	}
+	}
+
 }
