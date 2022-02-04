@@ -1,6 +1,5 @@
 package mx.com.oneproject.spco.repositorio;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,5 +25,12 @@ public interface IMSysAduTransRepo extends JpaRepository<SysAduTrasp, SysAduTras
 			                  @Param("empresa") String empresa,
 			                  @Param("recinto") String recinto);
 
+	
+	@Query("select distinct(m.numPart) from SysAduTrasp m  where m.IdCliProv = :cliente and m.empresa = :emp and m.recinto = :rec  ")
+	List<String> BuscarByCliERP(@Param("cliente") String cliente,  @Param("emp") String emp, @Param("rec") String rec);
+
+	@Query("select distinct(m.numFact) from SysAduTrasp m  where m.IdCliProv = :cliente and m.empresa = :emp and m.recinto = :rec  ")
+	List<String> BuscarByCliERF(@Param("cliente") String cliente,  @Param("emp") String emp, @Param("rec") String rec);
+	
 
 }
