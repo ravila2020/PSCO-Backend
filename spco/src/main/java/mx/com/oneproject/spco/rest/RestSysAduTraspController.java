@@ -25,7 +25,9 @@ import mx.com.oneproject.spco.modelo.SysUsuarios;
 import mx.com.oneproject.spco.repositorio.IMSysAduTransRepo;
 import mx.com.oneproject.spco.repositorio.IMSysCatProductoRepo;
 import mx.com.oneproject.spco.repositorio.IMSysUserRepo;
+import mx.com.oneproject.spco.respuesta.AnsSysAduFactCListaString;
 import mx.com.oneproject.spco.respuesta.AnsSysAduTrasp;
+import mx.com.oneproject.spco.respuesta.AnsSysAduTraspCListaString;
 import mx.com.oneproject.spco.respuesta.AnsSysAduTraspDesc;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -483,4 +485,108 @@ public class RestSysAduTraspController {
 		    	}
 	}
 
+	
+	/**
+	 * Esta clase define el método de consulta de partes del cliente
+	 * @author: Roberto Avila
+	 * @version: 04/02/2022/A
+	 * @see 
+	 */	
+    @GetMapping(path = {"/FactCliUNI"})
+    public AnsSysAduTraspCListaString ConsultaCliPart(
+            					@RequestParam(required = false, value = "cliente") String cliente, 
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysAduTraspCListaString respuesta = new AnsSysAduTraspCListaString();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+	// Preparación de la paginación.
+		List<String> SysAduTraspCero = aduTrasp.BuscarByCliERP(cliente,empresaS,recintoS);
+		if(SysAduTraspCero.isEmpty()) {
+			respuesta.setContenido(SysAduTraspCero);
+			respuesta.setCr("97");
+			respuesta.setDescripcion("No existe cliente / empresa / recinto");		
+		}
+		else {
+			 respuesta.setContenido(SysAduTraspCero);
+			 respuesta.setCr("00");
+			 respuesta.setDescripcion("Correcto");		
+		}
+
+        return respuesta;
+    }
+
+	/**
+	 * Esta clase define el método de consulta de facturas del cliente
+	 * @author: Roberto Avila
+	 * @version: 04/02/2022/A
+	 * @see 
+	 */	
+    @GetMapping(path = {"/FactCliFUNI"})
+    public AnsSysAduTraspCListaString ConsultaCliFact(
+            @RequestParam(required = false, value = "cliente") String cliente, 
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	AnsSysAduTraspCListaString respuesta = new AnsSysAduTraspCListaString();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+	// Preparación de la paginación.
+		List<String> SysAduTraspCero = aduTrasp.BuscarByCliERF(cliente,empresaS,recintoS);
+		if(SysAduTraspCero.isEmpty()) {
+			respuesta.setContenido(SysAduTraspCero);
+			respuesta.setCr("97");
+			respuesta.setDescripcion("No existe cliente / empresa / recinto");		
+		}
+		else {
+			 respuesta.setContenido(SysAduTraspCero);
+			 respuesta.setCr("00");
+			 respuesta.setDescripcion("Correcto");		
+		}
+
+        return respuesta;
+    }
+    	
+	
 }
