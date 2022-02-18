@@ -368,7 +368,8 @@ public class RestSysAduFactController {
 	@GetMapping(path = {"/CuantosInvTot"})
 	public AnsSysAduFactCuantos cuantosHayInvTot( HttpServletRequest peticion,
 			@RequestParam(required = false, value = "cli") String cli,
-			@RequestParam(required = false, value = "prod") String part){
+			@RequestParam(required = false, value = "prod") String part,
+			@RequestParam(required = false, value = "parm") String ind){
 		
 									System.out.print("\n\n + RestSysAduFactController Alta: " + peticion.getRequestURI() + " " + peticion.getRequestURL()+ "\n ");	
 									System.out.print("\n\n + RestSysAduFactController Alta: " + peticion.getHeader("Authorization")+ "\n ");	
@@ -378,7 +379,7 @@ public class RestSysAduFactController {
 	    	String token = peticion.getHeader("Authorization");
 	    	String user;
 	    	Integer resultado = 0;
-	    	String ind = "1";
+//	    	String ind = "1";
 	    	System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
 			if (token != null) {
 				user = Jwts.parser()
