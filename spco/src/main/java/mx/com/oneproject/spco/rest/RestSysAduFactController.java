@@ -799,7 +799,106 @@ public class RestSysAduFactController {
          return respuesta;
     }
 
+
 	/**
+	 * Esta clase define el método de consulta paginada de partes del cliente
+	 * @author: Roberto Avila
+	 * @version: 21/09/2021/A
+	 * @see 
+	 */	
+    @GetMapping(path = {"/aduFactCliPagBet2"})
+    public AnsSysAduFactList listarPagBet2(@RequestParam(required = false, value = "page") int page,
+            @RequestParam(required = false, value = "perpage") int perPage, 
+            @RequestParam(required = false, value = "cliente") String cliente, 
+            @RequestParam(required = false, value = "parte") String parte, 
+    		                    HttpServletRequest peticion) {
+    // Validación de token
+    	String user;
+    	String partei;
+    	String partef;
+    	if(parte.equals("0000000000")) 
+    	{
+    		partei = "0000000000";
+    		partef = "9999999999";
+    	} else
+    	{
+    		partei = parte;
+    		partef = parte;    		
+    	}
+    	AnsSysAduFactList respuesta = new AnsSysAduFactList();
+    	String token = peticion.getHeader("Authorization");
+                                                                		System.out.print("\n\n + RestSysAduFactController token: " + token + "\n ");
+		if (token != null) {
+			user = Jwts.parser()
+					.setSigningKey("0neProj3ct")
+					.parseClaimsJws(token.replace("Bearer",  ""))
+					.getBody()
+					.getSubject();
+                                                            			System.out.print("\n\n + RestSysAduFactController Usuario: " + user + "\n ");
+		}	else	{
+			respuesta.setCr("99");
+			respuesta.setDescripcion("Petición sin token");		
+			return respuesta;
+			}
+	// parametros empresa y recinto del usuario
+		SysUsuarios usuarioProc = sysUser.findByExiste(BigDecimal.valueOf(Double.valueOf(user)));
+		BigDecimal recinto = usuarioProc.getIdRecinto();
+		BigDecimal empresa = usuarioProc.getIdEmpresa();
+		String recintoS = recinto.toString();
+		String empresaS = empresa.toString();
+		empresaS = String.format("%04d", empresa.intValue());
+		recintoS = String.format("%04d", recinto.intValue());
+	// Preparación de la paginación.
+		boolean enabled = true;
+		SysAduFact SysAduFactCero = new SysAduFact();
+		Long todos = (long) 0;
+		double paginas = (float) 0.0;
+		Integer pagEntero = 0;
+		List<SysAduFact> todosSysAduFact;
+		List<SysAduFact> paginaSysAduFacts; 
+		Integer SysAduFactInicial, SysAduFactFinal;
+		
+		SysAduFactPag resultado = new SysAduFactPag();
+                                                                      	System.out.print(" + RestSysAduFactController listarPag page: " + page + " perpage: " + perPage +"\n ");
+    // obtener el total de sys_usuarios
+         todos = aduFact.countByTodoCPBT2(cliente,partei,partef);
+         paginas = (double) todos / perPage;
+         pagEntero = (int) paginas;
+         if ((paginas-pagEntero)>0)
+         {
+        	 pagEntero++;
+         }
+    // Obtener la lista de sys_usuarios solicitada 
+         SysAduFactInicial = (perPage  * (page - 1) );
+         SysAduFactFinal   = (SysAduFactInicial + perPage) - 1;
+         todosSysAduFact  = aduFact.BuscarByTodoCPBT2(cliente,partei,partef);
+         paginaSysAduFacts = aduFact.BuscarByTodoCPBT2(cliente,partei,partef);
+         paginaSysAduFacts.clear();
+         for (int i=0; i<todos;i++) {
+//        	 															System.out.print("\n " + "          + RestSysAduFactController Apendice: " + i + " - " + todosSysAduFact.get(i).getClveProduc() + " - " + todosSysAduFact.get(i).getTipProd() + " - " + todosSysAduFact.get(i).getDescCorIng());
+        	 if(i>=SysAduFactInicial && i<=SysAduFactFinal)
+        	 {
+        		 SysAduFactCero = todosSysAduFact.get(i);
+        		 paginaSysAduFacts.add(SysAduFactCero);
+//        		 System.out.print("  -- En lista  --" + SysAduFactCero.gegetClveProduc() );
+        	 }
+         }
+         
+         																System.out.print("\n + RestSysAduFactController listarPag todos: " + todos + " paginas: " + paginas + "  " + (paginas-pagEntero ) +"\n ");
+         //
+         resultado.setPage(page);
+         resultado.setPerPage(perPage);
+         resultado.setTotal((int) aduFact.countByTodoCPBT2(cliente,partei,partef));
+         resultado.setTotalPages(pagEntero);
+         resultado.setSysAduFacturas(paginaSysAduFacts);
+	 	 respuesta.setContenido(resultado);
+		 respuesta.setCr("00");
+		 respuesta.setDescripcion("Correcto");
+         return respuesta;
+    }
+
+    
+    /**
 	 * Esta clase define el método de consulta paginada de partes del cliente
 	 * @author: Roberto Avila
 	 * @version: 21/09/2021/A
