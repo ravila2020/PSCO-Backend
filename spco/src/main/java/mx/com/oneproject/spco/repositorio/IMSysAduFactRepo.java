@@ -34,9 +34,15 @@ public interface IMSysAduFactRepo extends JpaRepository<SysAduFact, SysAduFactId
 	@Query("select count(*) from SysAduFact m where m.IdCliProv = :cliente and m.numPart between :partei and :partef")
 	long countByTodoCPB(@Param("cliente") String cliente, @Param("partei") String partei, @Param("partef") String partef);
 
+	@Query("select count(*) from SysAduFact m where m.IdCliProv = :cliente and m.numPart between :partei and :partef and m.iDImpoEexpo = '2' ")
+	long countByTodoCPBT2(@Param("cliente") String cliente, @Param("partei") String partei, @Param("partef") String partef);
+
 
 	@Query("select m from SysAduFact m  where m.IdCliProv = :cliente and m.numPart between :partei and :partef order by m.IdCliProv, m.numPart, m.numFact, m.iDImpoEexpo")
 	List<SysAduFact> BuscarByTodoCPB(@Param("cliente") String cliente, @Param("partei") String partei, @Param("partef") String partef);
+
+	@Query("select m from SysAduFact m  where m.IdCliProv = :cliente and m.numPart between :partei and :partef and m.iDImpoEexpo = '2' order by m.IdCliProv, m.numPart, m.numFact, m.iDImpoEexpo")
+	List<SysAduFact> BuscarByTodoCPBT2(@Param("cliente") String cliente, @Param("partei") String partei, @Param("partef") String partef);
 
 	@Query("select m from SysAduFact m  where m.IdCliProv = :cliente and m.numPart = :parte and m.numFact = :factura")
 	SysAduFact BuscarByLlave(@Param("cliente") String cliente, @Param("parte") String parte, @Param("factura") String factura);
